@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hệ thống quản lý chấm công nhân viên bằng mã QR</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>:root{--bg:#fff6ee;--bgo:#f3e2d0;--ink:#2a1608;--mute:#7a6a5d;--line:#efdfce;--brand:#ff7a1a;--bd:#d9480f;--ok:#0b8a63;--okbg:#e3f8f1;--warn:#a16207;--warnbg:#fef3c7;--bad:#c92a2a;--sh:0 1px 2px rgba(120,60,10,.06),0 10px 30px rgba(120,60,10,.08);--s1:#ff8a2a;--s2:#ff6a00;--st:#3d1d06;--sx:#1f0e03;--sm:rgba(255,255,255,.28);--t1:#fff8f2;--t2:#ffe9d6;--t3:#ffe3cc;--n1:#f7efe6;--n2:#f4e8dc;--l1:#ff9a3c;--l2:#ff6a00}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:15px/1.5 'Be Vietnam Pro',system-ui,sans-serif;background:var(--bgo);color:var(--ink)}
+body.im{background-size:cover;background-position:center;background-attachment:fixed}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+#app{min-height:100vh;transition:opacity .25s,transform .25s}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.rl{transform:rotate(90deg)}.ic.rr{transform:rotate(-90deg)}
+.shell{display:grid;grid-template-columns:272px 1fr;min-height:100vh}
+.side{margin:14px 0 14px 14px;height:calc(100vh - 28px);position:sticky;top:14px;border-radius:26px;background:linear-gradient(180deg,var(--s1),var(--s2));color:var(--st);padding:20px 14px 14px;display:flex;flex-direction:column;overflow-y:auto;box-shadow:var(--sh)}
+.logo{display:flex;align-items:center;gap:10px;color:var(--sx);font-weight:800;font-size:17px;line-height:1.2;padding:2px 8px 18px}
+.logo i{width:36px;height:36px;border-radius:11px;background:#fff;display:grid;place-items:center;flex:none}
+.logo i .ic{stroke:var(--bd)}
+.lg2{width:36px;height:36px;border-radius:11px;object-fit:cover;flex:none}
+.logo small{display:block;font-size:12px;font-weight:500;opacity:.8}
+.nav{position:relative;display:flex;flex-direction:column;gap:4px;flex:none}
+.pill{position:absolute;left:0;right:0;height:46px;border-radius:12px;background:#fff;box-shadow:0 8px 18px rgba(0,0,0,.14);transition:transform .38s cubic-bezier(.4,0,.2,1)}
+.nav a{position:relative;height:46px;display:flex;align-items:center;gap:12px;padding:0 14px;border-radius:12px;color:inherit;text-decoration:none;font-weight:500;transition:color .2s}
+.nav a:hover{color:var(--sx)}.nav a.on{color:var(--bd)}
+.bdg{margin-left:auto;background:var(--bad);color:#fff;border-radius:99px;min-width:20px;height:20px;padding:0 6px;font-size:12px;display:grid;place-items:center}
+.pres{margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.22);flex:none}
+.phd{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;color:var(--sx);font-weight:600;padding:6px 8px;border-radius:10px;cursor:pointer}
+.phd:hover{background:var(--sm)}
+.phd b{background:var(--sm);border-radius:99px;padding:0 8px;font-size:12px}
+.phd .ch{margin-left:auto;width:16px;height:16px;transition:transform .2s}.phd .ch.up{transform:rotate(180deg)}
+.pl{max-height:190px;overflow-y:auto;padding:4px 0}
+.pi{display:flex;align-items:center;gap:10px;padding:5px 8px}
+.pi b{display:block;font-size:13px;color:var(--sx);line-height:1.2}.pi small{font-size:12px;opacity:.85}
+.pav{position:relative;width:30px;height:30px;border-radius:50%;background:#fff;color:var(--bd);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.pav i{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid var(--s2)}
+.pm{font-size:12px;padding:4px 8px;opacity:.85}
+.me{margin-top:auto;display:flex;align-items:center;gap:6px;padding:10px;border-radius:16px;background:var(--sm);flex:none}
+.side>.nav+.me,.side>.pres+.me{margin-top:auto}
+.me>div{min-width:0;flex:1}
+.av{width:36px;height:36px;border-radius:50%;background:#fff;color:var(--bd);display:grid;place-items:center;font-weight:700;flex:none}
+.me b{display:block;color:var(--sx);font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.me small{font-size:12px}
+.me button{background:none;border:0;color:var(--st);cursor:pointer;padding:7px;border-radius:9px;transition:color .2s,background .2s;display:grid}
+.me button:hover{color:var(--sx);background:rgba(255,255,255,.25)}
+.main{margin:14px;border-radius:26px;background:var(--bg);padding:30px 34px 90px;min-height:calc(100vh - 28px);overflow:hidden}
+body.im .main{background:var(--bg);background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.main .av{background:var(--t2)}
+.mtop{display:none}
+.scrim{display:none}
+#page{max-width:1040px}
+h1{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+h2{font-size:17px;font-weight:700;margin-bottom:12px}
+.sub{color:var(--mute);margin:4px 0 8px}
+.ph{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.pa{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sec{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;color:var(--mute);margin:26px 0 12px}.sec::after{content:'';flex:1;height:1px;background:var(--line)}
+.ph+.sec{margin-top:14px}
+.card{background:#fff;border-radius:18px;padding:22px;box-shadow:var(--sh);margin-bottom:18px;position:relative}
+.ed{outline:2px dashed var(--brand);outline-offset:-2px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}.g2>.card{margin:0}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px;margin-bottom:18px}.g3>.card{margin:0}
+.big{font-size:32px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
+.m{color:var(--mute);font-size:14px}
+.sb{position:absolute;right:20px;top:20px;width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+.sb.ok{background:var(--okbg);color:var(--ok)}.sb.clk{background:var(--n1);color:var(--mute)}.sb.wrn{background:var(--warnbg);color:var(--warn)}.sb.pay,.sb.shd{background:var(--t2);color:var(--bd)}
+.bar{height:8px;background:var(--n2);border-radius:99px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:var(--brand);border-radius:99px;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{width:0}}
+.chip{display:inline-block;border-radius:99px;padding:3px 11px;font-size:13px;font-weight:600;background:var(--n1);color:var(--mute);white-space:nowrap}
+.chip.ok{background:var(--okbg);color:var(--ok)}.chip.w{background:var(--warnbg);color:var(--warn)}
+.btn{border:0;background:var(--bd);color:#fff;font-weight:600;padding:11px 20px;border-radius:12px;cursor:pointer;transition:transform .15s,box-shadow .2s,background .2s;display:inline-flex;align-items:center;justify-content:center}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px color-mix(in srgb,var(--brand) 40%,transparent)}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.4;pointer-events:none}
+.btn.l{background:var(--t2);color:var(--bd)}.btn.l:hover{box-shadow:none;background:var(--t3)}
+.btn.sm{padding:6px 12px;font-size:13px;border-radius:9px}
+.btn .ic{width:16px;height:16px;margin-right:6px}
+.btn .ic.rl,.btn .ic.rr{margin:0}
+label.btn{cursor:pointer}
+select,input{padding:8px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.ti{width:100%;min-width:90px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}.ti:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+.sel{width:auto;min-width:0;padding:5px 8px;font-size:13px}
+.un{display:flex;align-items:center;gap:8px}.un .ti{min-width:0}
+input[type=checkbox]{padding:0;border:0;width:16px;height:16px;accent-color:var(--brand)}
+.fl>.fr:last-child{border-bottom:0}
+.fr{display:flex;gap:20px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.fk{flex:0 0 min(240px,38%);color:var(--mute);font-size:14px}
+.hint{display:block;font-size:13px;opacity:.8}
+.fv{flex:1;min-width:0;font-weight:600}
+.brk{word-break:break-all;font-weight:500}
+.rw2{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.rw2:last-child{border-bottom:0}
+.rg{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.who{display:flex;align-items:center;gap:10px;font-weight:600}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}.ch h2{margin:0}
+.ma{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
+.acc{border-bottom:1px solid var(--line)}.acc:last-child{border-bottom:0}
+.as{display:flex;align-items:center;gap:12px;width:100%;padding:12px 6px;background:none;border:0;cursor:pointer;text-align:left;border-radius:12px;flex-wrap:wrap}
+.as:hover{background:var(--t1)}
+.as .ic.ch{margin-left:auto;transition:transform .2s;color:var(--mute)}
+.acc.op>.as .ic.ch{transform:rotate(180deg)}
+.nmv{display:flex;flex-direction:column;line-height:1.3;min-width:0;flex:1 1 160px}.nmv small{color:var(--mute);font-size:13px}
+.amt{margin-left:auto;font-variant-numeric:tabular-nums}
+.ab{display:none;padding:2px 10px 16px}
+.acc.op>.ab{display:block}
+.tbr{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.srch{position:relative;flex:1 1 240px}
+.srch .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mute);width:18px;height:18px}
+.srch input{padding-left:38px}
+.fc{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.fch{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 14px;font-weight:600;font-size:13px;cursor:pointer;color:var(--mute);transition:background .15s}
+.fch b{margin-left:6px;opacity:.75}
+.fch.on{background:var(--bd);color:#fff;border-color:var(--bd)}
+.dr{display:flex;gap:8px;align-items:center;margin-top:8px}.dr .ti{min-width:0}
+.ph2{display:flex;align-items:center;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.av.xl{width:60px;height:60px;font-size:24px}.nm2{font-size:20px;font-weight:800}
+.wk{display:grid;gap:10px}
+.wr{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:14px;background:var(--t1)}
+.wd{width:40px;height:40px;border-radius:12px;background:var(--bd);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none}
+.ws{display:flex;gap:8px;flex-wrap:wrap}
+.sh{background:#fff;border:1px solid var(--line);border-radius:10px;padding:5px 10px;font-weight:600;font-size:14px}.sh small{color:var(--mute);font-weight:500;margin-left:8px;font-size:13px}
+.tg{width:34px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--mute);font-weight:700;cursor:pointer;transition:transform .15s,background .2s,color .2s}
+.tg.on{background:var(--bd);border-color:var(--bd);color:#fff}.tg:active{transform:scale(.88)}
+.sr2{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.sr2>div{flex:1 1 220px}.sr2 .btn{margin-left:auto}
+.sb2{width:44px;height:44px;border-radius:12px;background:var(--t2);color:var(--bd);display:grid;place-items:center;flex:none}
+.note{display:flex;gap:12px;align-items:center;background:var(--warnbg)}
+.cn,.mn{display:flex;align-items:center;gap:12px;font-weight:700}.cn{margin-bottom:14px}
+.leg{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin-bottom:14px}.leg span{display:flex;align-items:center;gap:6px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.cal b{text-align:center;font-size:13px;font-weight:700;color:var(--bd);padding-bottom:4px}
+.dy{font:inherit;color:inherit;text-align:left;cursor:pointer;min-height:68px;padding:8px;border:1px solid var(--line);border-radius:12px;background:#fff;transition:background .15s,border-color .15s}
+.dy:hover:not(:disabled){background:var(--t1)}
+.dy>span{font-weight:700;font-size:14px}
+.dy>div{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.dy.td>span{color:var(--bd)}.dy.td{border-color:var(--brand)}
+.dy.sl{background:var(--t2);border:2px solid var(--bd)}
+.dy.fu{border-color:transparent;background:none;cursor:default}.dy.fu>span{color:#a39383;font-weight:500}
+.dy u,.leg u{display:inline-grid;place-items:center;min-width:22px;height:20px;padding:0 5px;border-radius:7px;background:var(--n2);color:var(--mute);font-size:11px;font-weight:700;text-decoration:none}
+.dy u.g,.leg u.g{background:var(--bd);color:#fff}.dy u.x,.leg u.x{background:#f59f00;color:#2a1608}
+.leg u{min-width:14px;height:14px;padding:0}
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}.days>.card{margin:0}
+.sr{display:grid;grid-template-columns:64px 1fr 1fr auto;gap:6px;margin-bottom:8px}.sr .n{min-width:0}
+.sl{margin-bottom:8px}
+.stp{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.stp:last-child{border:0}.stp>span:nth-child(2){flex:1;font-weight:600}
+.sn{width:30px;height:30px;border-radius:50%;background:var(--n1);display:grid;place-items:center;font-weight:700;flex:none}.sn.d{background:var(--okbg);color:var(--ok)}.sn .ic{width:18px;height:18px}
+.qrw{position:relative;overflow:hidden;width:220px;margin:0 auto 16px;border-radius:14px}
+.qrw svg{display:block;width:220px;height:220px;padding:12px;background:#fff;border:2px solid var(--ink);border-radius:14px;fill:var(--ink)}
+.qrw.scan::after{content:'';position:absolute;left:0;right:0;height:4px;background:var(--brand);box-shadow:0 0 20px 6px color-mix(in srgb,var(--brand) 55%,transparent);animation:sw .9s ease-in-out}
+@keyframes sw{0%,100%{top:0}50%{top:calc(100% - 4px)}}
+.res{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.res.ok{background:var(--okbg)}.res.w{background:var(--warnbg)}
+.stamp{width:112px;height:112px;border:4px solid var(--ok);border-radius:50%;color:var(--ok);display:grid;place-items:center;text-align:center;font-weight:800;font-size:16px;line-height:1.2;transform:rotate(-9deg);animation:st .45s cubic-bezier(.2,1.4,.5,1) both}
+@keyframes st{from{transform:rotate(-9deg) scale(1.8);opacity:0}}
+dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px}dt{color:var(--mute)}dd{font-weight:600}
+.rise{animation:rise .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*70ms)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.oF{animation:oF .18s ease-in both}.iF{animation:iF .36s cubic-bezier(.2,.8,.2,1) both}
+.oB{animation:oB .18s ease-in both}.iB{animation:iB .36s cubic-bezier(.2,.8,.2,1) both}
+@keyframes oF{to{opacity:0;transform:translateX(-36px)}}@keyframes iF{from{opacity:0;transform:translateX(48px)}}
+@keyframes oB{to{opacity:0;transform:translateX(36px)}}@keyframes iB{from{opacity:0;transform:translateX(-48px)}}
+.ov{position:fixed;inset:0;background:rgba(42,22,8,.45);display:grid;place-items:center;z-index:50;animation:fd .2s both}
+.mb{background:#fff;border-radius:20px;padding:26px;width:min(460px,92vw);max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(42,22,8,.3);animation:pp .25s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fd{from{opacity:0}}@keyframes pp{from{opacity:0;transform:translateY(14px) scale(.97)}}
+.ts{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#2a1608;color:#fff;padding:10px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:92vw}.ts.on{opacity:1;transform:translate(-50%,0)}
+.bgp{height:150px;border-radius:14px;background:linear-gradient(160deg,var(--l1),var(--l2))}
+.swr{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.swb{width:38px;height:38px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line);cursor:pointer;transition:transform .15s}.swb:hover{transform:scale(1.1)}.swb.on{box-shadow:0 0 0 3px var(--ink)}
+.lgp{width:44px;height:44px;border-radius:12px;background:var(--t2);color:var(--bd);display:grid;place-items:center;overflow:hidden;flex:none}.lgp img{width:100%;height:100%;object-fit:cover}
+.meter{height:6px;background:var(--n2);border-radius:99px;overflow:hidden;margin:-6px 0 6px}
+.meter i{display:block;height:100%;width:0;border-radius:99px;transition:width .3s,background .3s}
+.lbl2{display:block;font-size:13px;font-weight:600;margin-bottom:14px}
+.sim{position:fixed;right:16px;bottom:16px;z-index:40;display:flex;gap:8px;align-items:center;background:#fff;box-shadow:var(--sh);border-radius:14px;padding:4px}
+.sim button{border:0;background:none;font-weight:600;color:var(--mute);cursor:pointer;padding:6px 10px}
+.sim>:not(:first-child){display:none}.sim.open>:not(:first-child){display:block}.sim input{padding:4px 8px}
+.lgn{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--bgo)}
+.lc{width:min(1080px,100%);display:grid;grid-template-columns:1.05fr 1fr;background:#fff;border-radius:30px;padding:16px;box-shadow:0 30px 80px rgba(17,26,58,.12)}
+.lp{background:linear-gradient(160deg,var(--l1),var(--l2));background-size:cover;background-position:center;position:relative;border-radius:22px;padding:44px;color:#fff;display:flex;flex-direction:column;min-height:560px;overflow:hidden}
+.lp>.dc{position:absolute;inset:0;width:100%;height:100%;z-index:0}.lp>*:not(.dc){position:relative;z-index:1}
+.lp h2{font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-.03em;line-height:1.2;margin:0 0 14px;max-width:420px}
+.lp p{opacity:.9;max-width:360px}
+.lp.hb h2,.lp.hb>p{text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.lp.hb .steps div{background:rgba(0,0,0,.4);backdrop-filter:blur(6px)}
+.ul{position:relative;display:inline-block}
+.ul svg{position:absolute;left:0;bottom:-8px;width:100%;height:10px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round}
+@media(prefers-reduced-motion:no-preference){.ul svg{stroke-dasharray:220;stroke-dashoffset:220;animation:dr 1s .5s forwards}}
+@keyframes dr{to{stroke-dashoffset:0}}
+.steps{margin-top:auto;display:grid;gap:10px}.steps div{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.18);border-radius:14px;padding:12px 14px;font-weight:600}.steps b{width:28px;height:28px;border-radius:50%;background:#fff;color:var(--bd);display:grid;place-items:center;font-size:14px;flex:none}
+.lf{padding:34px 48px;display:flex;flex-direction:column;justify-content:center;max-width:460px;width:100%;margin:0 auto}
+.lb{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;font-size:19px;margin-bottom:22px}
+.lb i{width:36px;height:36px;border-radius:11px;background:var(--brand);display:grid;place-items:center}.lb .ic{stroke:#fff}
+.lf h1{text-align:center;font-size:28px}.lf .sub{text-align:center;margin:6px 0 24px}
+.lf label{display:block;font-size:13px;font-weight:600;margin-bottom:14px}
+.in{width:100%;margin-top:6px;padding:13px 14px;border:1.5px solid transparent;background:var(--n1);border-radius:12px;transition:border-color .2s,background .2s}
+.in:focus{outline:0;border-color:var(--brand);background:#fff}
+.pw{position:relative}.pw button{position:absolute;right:6px;top:50%;margin-top:3px;transform:translateY(-50%);background:none;border:0;color:var(--mute);cursor:pointer;padding:8px}
+.rw{display:flex;justify-content:space-between;align-items:center;font-size:13px;gap:8px}.rw a{color:var(--bd);text-decoration:none;font-weight:600}
+.lf .ck{display:flex;align-items:center;gap:8px;font-weight:500;margin:0}
+.er{color:#d92d20;font-size:13px;min-height:20px;margin:8px 0}
+.lgb{width:100%;padding:14px;font-size:16px}
+.dv{display:flex;align-items:center;gap:12px;color:var(--mute);font-size:13px;margin:22px 0 14px}.dv::before,.dv::after{content:'';flex:1;height:1px;background:var(--line)}
+.dm{display:flex;gap:10px}.dm button{flex:1;padding:11px;border-radius:12px;border:1px solid var(--line);background:#fff;font-weight:600;cursor:pointer;transition:transform .15s,border-color .2s}
+.dm button:hover{border-color:var(--brand);transform:translateY(-2px)}.dm button:active{transform:scale(.96)}
+.sk{animation:sk .4s}@keyframes sk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:720px){
+.lc{grid-template-columns:1fr;border-radius:22px;padding:10px}.lgn{padding:12px}.lp{padding:24px;min-height:0;border-radius:16px}.lp h2{font-size:26px}.steps{display:none}.lf{padding:24px 12px}
+.shell{display:block}
+.side{position:fixed;left:0;top:0;bottom:0;margin:0;width:284px;max-width:86vw;height:auto;border-radius:0 24px 24px 0;transform:translateX(-102%);transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:40}
+.shell.nv .side{transform:none;box-shadow:0 0 60px rgba(0,0,0,.35)}
+.shell.nv .scrim{display:block;position:fixed;inset:0;background:rgba(42,22,8,.45);z-index:30}
+.mtop{display:block;position:sticky;top:0;z-index:10;padding:2px 0 8px}
+.mbtn{width:44px;height:44px;border-radius:12px;border:0;background:#fff;box-shadow:var(--sh);display:grid;place-items:center;cursor:pointer;color:var(--bd)}
+.main{margin:8px;border-radius:20px;min-height:calc(100vh - 16px);padding:12px 14px 90px}
+h1{font-size:24px}.big{font-size:28px}.days{grid-template-columns:1fr}
+.fr{flex-wrap:wrap;gap:6px 12px}.fk{flex-basis:100%}
+.sr{grid-template-columns:1fr 1fr auto}.sr .n{grid-column:1/-1}
+input,select{font-size:16px}.btn{min-height:44px}.btn.sm{min-height:38px}.tg{width:40px;height:36px}
+.cal{gap:4px}.dy{min-height:56px;padding:5px}.dy u{min-width:18px;height:18px;font-size:10px;padding:0 3px}
+.sim{flex-wrap:wrap;max-width:calc(100vw - 24px);right:12px;bottom:12px}
+.as .chip{font-size:12px}
+.card{padding:16px}
+}
+.cr{gap:6px;margin-bottom:6px;align-items:center}.cr .ti:first-child{flex:1.5}.cr .btn{padding:6px 8px}.cls .btn.on{background:var(--brand);color:#fff}.lgn .lc{grid-template-columns:1fr;width:min(520px,100%)}.swr .btn.on{background:var(--brand);color:#fff}
+
+
+
+
+.mb:has(.qg){width:min(720px,94vw)}.ma .chip{align-self:center}.ink{color:var(--ink);font-weight:600}.ink2{color:var(--ink);font-weight:400}
+
+
+
+.cpW{overflow-x:auto;border:2px solid #6f7d93;border-radius:12px;background:#fff}
+.cpTb{width:100%;border-collapse:collapse;font-size:14px;color:var(--ink)}
+.cpTb th,.cpTb td{border:1px solid #9aa6b8;padding:11px 14px;vertical-align:top;text-align:left}
+.cpTb thead th{background:color-mix(in srgb,var(--brand) 20%,#fff);font-weight:700;border-bottom:2px solid #6f7d93}
+.cpTb .cpG td{background:color-mix(in srgb,var(--brand) 9%,#fff);font-weight:700}
+.cpTb tr:first-child>*{border-top:0}.cpTb tr>:first-child{border-left:0}.cpTb tr>:last-child{border-right:0}.cpTb tr:last-child>*{border-bottom:0}
+.cpEq{table-layout:fixed}.cpEq th:first-child{width:92px}
+.cpD{width:96px;font-weight:600;white-space:nowrap;background:#f3f5f8}.cpN{opacity:.5}
+.cpL{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:2px 0}.cpL+.cpL{margin-top:6px}
+.cpL.add,.cpL.rem,.cpL.chg{padding:6px 8px;border-radius:4px}
+.cpL.add{background:#effaf3;box-shadow:inset 3px 0 #2e9d5f}.cpL.rem{background:#fdf1f0;box-shadow:inset 3px 0 #d64545}.cpL.chg{background:#fff7e8;box-shadow:inset 3px 0 #e0a030}
+.cpB{font-size:12px;font-weight:600;padding:1px 7px;border-radius:4px;border:1px solid;background:#fff}
+.cpB.add{color:#1d7a47;border-color:#b6e2c8}.cpB.rem{color:#b42318;border-color:#f3c0bb}.cpB.chg{color:#a15c07;border-color:#f1d49b}
+.mb:has(.cpTb){width:min(780px,95vw)}
+
+.ntf{cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 16px;border-bottom:1px solid var(--line)}.ntf:last-child{border-bottom:0}
+.ntf.un{background:color-mix(in srgb,var(--brand) 5%,#fff);box-shadow:inset 3px 0 var(--brand)}
+.ntf:hover{background:color-mix(in srgb,var(--brand) 4%,#fff)}.ntfK{font-size:13px;color:var(--brand);margin-top:3px}.ntfX{color:var(--ink);font-weight:400}.ntf.un .ntfX{font-weight:600}
+.ntfT{flex:none;font-size:13px;color:var(--ink);opacity:.6;white-space:nowrap}
+@media(max-width:560px){.ntf{flex-direction:column;gap:4px}}.pf{margin-bottom:6px}
+.pfc{position:relative;height:170px;border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--brand) 40%,#fff),color-mix(in srgb,var(--brand) 85%,#14213d)) center/cover no-repeat}
+.pfb{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;align-items:center;padding:7px 12px;border-radius:8px;border:0;background:rgba(255,255,255,.94);color:#1b2433;font:600 13px inherit;font-family:inherit;cursor:pointer}.pfb svg,.pfk svg{width:16px;height:16px}
+.pfr{display:flex;align-items:flex-end;gap:16px;padding:0 10px;margin-top:-46px}
+.pfa{position:relative;flex:none}.av.pfv{width:104px;height:104px;font-size:40px;border:4px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.22);background-color:color-mix(in srgb,var(--brand) 16%,#fff)}
+.pfk{position:absolute;right:0;bottom:6px;width:32px;height:32px;border-radius:50%;border:2px solid #fff;background:#e8ecf2;color:#1b2433;display:grid;place-items:center;cursor:pointer;padding:0}
+.pfn{padding:0 0 6px;min-width:0}
+@media(max-width:560px){.pfc{height:120px}.av.pfv{width:84px;height:84px;font-size:32px}.pfr{margin-top:-38px}}</style></head>
+<body>
+<div id="app"></div>
+<div id="md"></div>
+<div class="ts" id="ts"></div>
+<div class="sim" id="simw"><button onclick="document.getElementById('simw').classList.toggle('open')">Giờ demo</button><input type="datetime-local" id="sim"><button onclick="setData('sample')">Dữ liệu mẫu</button><button onclick="setData('empty')">Hệ thống trống</button></div>
+<script>
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+    var _this = {};
+    var makeImpl = function(test, maskPattern) {
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+      mapData(_dataCache, maskPattern);
+    };
+    var setupPositionProbePattern = function(row, col) {
+      for (var r = -1; r <= 7; r += 1) {
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+        for (var c = -1; c <= 7; c += 1) {
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+    var getBestMaskPattern = function() {
+      var minLostPoint = 0;
+      var pattern = 0;
+      for (var i = 0; i < 8; i += 1) {
+        makeImpl(true, i);
+        var lostPoint = QRUtil.getLostPoint(_this);
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+      return pattern;
+    };
+    var setupTimingPattern = function() {
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+    var setupPositionAdjustPattern = function() {
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+      for (var i = 0; i < pos.length; i += 1) {
+        for (var j = 0; j < pos.length; j += 1) {
+          var row = pos[i];
+          var col = pos[j];
+          if (_modules[row][col] != null) {
+            continue;
+          }
+          for (var r = -2; r <= 2; r += 1) {
+            for (var c = -2; c <= 2; c += 1) {
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+    var setupTypeNumber = function(test) {
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+    var setupTypeInfo = function(test, maskPattern) {
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+      for (var i = 0; i < 15; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+      for (var i = 0; i < 15; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+    var mapData = function(data, maskPattern) {
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+        if (col == 6) col -= 1;
+        while (true) {
+          for (var c = 0; c < 2; c += 1) {
+            if (_modules[row][col - c] == null) {
+              var dark = false;
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+              var mask = maskFunc(row, col - c);
+              if (mask) {
+                dark = !dark;
+              }
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+          row += inc;
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+    var createBytes = function(buffer, rsBlocks) {
+      var offset = 0;
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+        dcdata[r] = new Array(dcCount);
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+      var data = new Array(totalCodeCount);
+      var index = 0;
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+      return data;
+    };
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+      var buffer = qrBitBuffer();
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+      while (true) {
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+      return createBytes(buffer, rsBlocks);
+    };
+    _this.addData = function(data, mode) {
+      mode = mode || 'Byte';
+      var newData = null;
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+        _typeNumber = typeNumber;
+      }
+      makeImpl(false, getBestMaskPattern() );
+    };
+    _this.createTableTag = function(cellSize, margin) {
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+      var qrHtml = '';
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+        qrHtml += '<tr>';
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+        qrHtml += '</tr>';
+      }
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+      return qrHtml;
+    };
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        opts = arguments[0];
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+      return qrSvg;
+    };
+    _this.createDataURL = function(cellSize, margin) {
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+    _this.createImgTag = function(cellSize, margin, alt) {
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+      return img;
+    };
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+      var y, x, r1, r2, p;
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+        ascii += '\n';
+      }
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+      return ascii.substring(0, ascii.length-1);
+    };
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+      var y, x, r, p;
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+          line += p ? white : black;
+        }
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+      return ascii.substring(0, ascii.length-1);
+    };
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+    return _this;
+  };
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+    var unicodeMap = function() {
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+      return unicodeMap;
+    }();
+    var unknownChar = '?'.charCodeAt(0);
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              bytes.push(b);
+            } else {
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+  var QRUtil = function() {
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+    var _this = {};
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+    _this.getMaskFunction = function(maskPattern) {
+      switch (maskPattern) {
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+    _this.getLengthInBits = function(mode, type) {
+      if (1 <= type && type < 10) {
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+      } else if (type < 27) {
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+      } else if (type < 41) {
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+      } else {
+        throw 'type:' + type;
+      }
+    };
+    _this.getLostPoint = function(qrcode) {
+      var moduleCount = qrcode.getModuleCount();
+      var lostPoint = 0;
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+          for (var r = -1; r <= 1; r += 1) {
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+            for (var c = -1; c <= 1; c += 1) {
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+              if (r == 0 && c == 0) {
+                continue;
+              }
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+      var darkCount = 0;
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+      return lostPoint;
+    };
+    return _this;
+  }();
+  var QRMath = function() {
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+    var _this = {};
+    _this.glog = function(n) {
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+      return LOG_TABLE[n];
+    };
+    _this.gexp = function(n) {
+      while (n < 0) {
+        n += 255;
+      }
+      while (n >= 256) {
+        n -= 255;
+      }
+      return EXP_TABLE[n];
+    };
+    return _this;
+  }();
+  function qrPolynomial(num, shift) {
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+    var _this = {};
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+    _this.getLength = function() {
+      return _num.length;
+    };
+    _this.multiply = function(e) {
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+      return qrPolynomial(num, 0);
+    };
+    _this.mod = function(e) {
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+      return qrPolynomial(num, 0).mod(e);
+    };
+    return _this;
+  };
+  var QRRSBlock = function() {
+    var RS_BLOCK_TABLE = [
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+    var _this = {};
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+      var length = rsBlock.length / 3;
+      var list = [];
+      for (var i = 0; i < length; i += 1) {
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+      return list;
+    };
+    return _this;
+  }();
+  var qrBitBuffer = function() {
+    var _buffer = [];
+    var _length = 0;
+    var _this = {};
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+    _this.putBit = function(bit) {
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+      _length += 1;
+    };
+    return _this;
+  };
+  var qrNumber = function(data) {
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+    var _this = {};
+    _this.getMode = function() {
+      return _mode;
+    };
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+    _this.write = function(buffer) {
+      var data = _data;
+      var i = 0;
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+    return _this;
+  };
+  var qrAlphaNum = function(data) {
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+    var _this = {};
+    _this.getMode = function() {
+      return _mode;
+    };
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+    _this.write = function(buffer) {
+      var s = _data;
+      var i = 0;
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+    var getCode = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+    return _this;
+  };
+  var qr8BitByte = function(data) {
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+    var _this = {};
+    _this.getMode = function() {
+      return _mode;
+    };
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+    return _this;
+  };
+  var qrKanji = function(data) {
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+    var _bytes = stringToBytes(data);
+    var _this = {};
+    _this.getMode = function() {
+      return _mode;
+    };
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+    _this.write = function(buffer) {
+      var data = _bytes;
+      var i = 0;
+      while (i + 1 < data.length) {
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+        buffer.put(c, 13);
+        i += 2;
+      }
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+    return _this;
+  };
+  var byteArrayOutputStream = function() {
+    var _bytes = [];
+    var _this = {};
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+    return _this;
+  };
+  var base64EncodeOutputStream = function() {
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+    var _this = {};
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+    var encode = function(n) {
+      if (n < 0) {
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+    _this.writeByte = function(n) {
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+    _this.flush = function() {
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+      if (_length % 3 != 0) {
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+    _this.toString = function() {
+      return _base64;
+    };
+    return _this;
+  };
+  var base64DecodeInputStream = function(str) {
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+    var _this = {};
+    _this.read = function() {
+      while (_buflen < 8) {
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+        var c = _str.charAt(_pos);
+        _pos += 1;
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          continue;
+        }
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+    return _this;
+  };
+  var gifImage = function(width, height) {
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+    var _this = {};
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+    _this.write = function(out) {
+      out.writeString('GIF87a');
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+      out.writeByte(lzwMinCodeSize);
+      var offset = 0;
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+      out.writeString(';');
+    };
+    var bitOutputStream = function(out) {
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+      var _this = {};
+      _this.write = function(data, length) {
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+      return _this;
+    };
+    var getLZWRaster = function(lzwMinCodeSize) {
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+      var table = lzwTable();
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+      bitOut.write(clearCode, bitLength);
+      var dataIndex = 0;
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+      while (dataIndex < _data.length) {
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+        if (table.contains(s + c) ) {
+          s = s + c;
+        } else {
+          bitOut.write(table.indexOf(s), bitLength);
+          if (table.size() < 0xfff) {
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+            table.add(s + c);
+          }
+          s = c;
+        }
+      }
+      bitOut.write(table.indexOf(s), bitLength);
+      bitOut.write(endCode, bitLength);
+      bitOut.flush();
+      return byteOut.toByteArray();
+    };
+    var lzwTable = function() {
+      var _map = {};
+      var _size = 0;
+      var _this = {};
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+      _this.size = function() {
+        return _size;
+      };
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+      return _this;
+    };
+    return _this;
+  };
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+    var b = byteArrayOutputStream();
+    gif.write(b);
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+    return 'data:image/gif;base64,' + base64;
+  };
+  return qrcode;
+}();
+!function() {
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        else {
+          i++;
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+}();
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+</script>
+<script>
+const $=id=>document.getElementById(id),p=n=>String(n).padStart(2,'0'),sleep=ms=>new Promise(r=>setTimeout(r,ms)),clone=o=>JSON.parse(JSON.stringify(o));
+const W=['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'],DN=['CN','T2','T3','T4','T5','T6','T7'],DAYS=[1,2,3,4,5,6,0];
+const hm=d=>p(d.getHours())+':'+p(d.getMinutes()),dt=d=>W[d.getDay()]+', '+p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear(),ymd=d=>d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()),ym=d=>d.getFullYear()+'-'+p(d.getMonth()+1);
+const vnd=n=>Math.round(n).toLocaleString('vi-VN')+' đ',dmy=k=>k?k.split('-').reverse().join('/'):'',day0=k=>new Date(k+'T00:00:00');
+const h36=s=>Math.abs([...s].reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7)).toString(36);
+const IC={cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',qr:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M21 14v.01M14 21h.01M17 21h4v-4"/>',dl:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',clk:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',ok:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>',out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',usr:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',shd:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',wrn:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>',pen:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',set:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',x:'<path d="M18 6L6 18M6 6l12 12"/>',plus:'<path d="M12 5v14M5 12h14"/>',img:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',menu:'<path d="M3 6h18M3 12h18M3 18h18"/>',pal:'<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>',chev:'<path d="M6 9l6 6 6-6"/>',search:'<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>',cash:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>',users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>'};
+IC.pay=IC.cash;IC.cam='<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>';IC.bell='<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>';
+const ic=(k,c='')=>`<svg class="ic${c?' '+c:''}" viewBox="0 0 24 24">${IC[k]}</svg>`;
+
+const DEMO=true;
+const ADM={id:'admin',ten:'Admin',admin:true};
+const PW={},MUST={},EX={},R=[],REQ=[],ADJ=[],LOCK={};
+let nid=1,rid=1,aid=1,CA={},GV=[],ST={},TH=DT();
+const hsl2rgb=(h,s,l)=>{const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12;return l-a*Math.max(-1,Math.min(k-3,9-k,1))};return[f(0),f(8),f(4)].map(v=>Math.round(v*255))};
+const lum=c=>{const[r,g,b]=c.map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*r+.7152*g+.0722*b};
+const ctr=(a,b)=>{const x=lum(a),y=lum(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const rgb2hs=([r,g,b])=>{r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let h=0;if(d){h=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;h=Math.round(h*60);if(h<0)h+=360}const l=(mx+mn)/2,s=d?d/(1-Math.abs(2*l-1)):0;return{h,s:Math.max(.5,Math.min(.9,s))}};
+const thKey=id=>'th:'+String(id).toLowerCase();
+const loadTheme=id=>{let t=null;try{t=JSON.parse(localStorage.getItem(thKey(id))||'null')}catch(e){}TH=Object.assign({img:'',h:null,s:null},t||{});applyTheme()};
+const saveTheme=()=>{try{localStorage.setItem(thKey(me.id),JSON.stringify(TH))}catch(e){toast('Không lưu được trên thiết bị này, ảnh có thể quá lớn')}};
+
+let me=null,res=null,cur=-1,tk=0,key='',MISS=[],ED=null,AF=null,FP=0,nxt='',CM=0,SD='',PM=0,PQ='',PN=20,GQ={q:'',st:'all',n:20},RQT='cho',PO=true;
+const OPEN=new Set();
+try{PO=localStorage.getItem('po')!=='0'}catch(e){}
+
+const def=()=>{const d=new Date();if(d.getDay()===0)d.setDate(d.getDate()-2);if(d.getDay()===6)d.setDate(d.getDate()-1);return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T21:05'};
+const now=()=>DEMO&&$('sim')&&$('sim').value?new Date($('sim').value):new Date();
+const endAt=(d,s)=>{const x=new Date(d),[h,m]=s.split(':');x.setHours(+h,+m,0,0);return x};
+const inR=(a,b,k)=>!!a&&!!b&&k>=a&&k<=b;
+const eff=(g,d)=>{const k=ymd(d);if(g.tt==='nghi'&&(!g.from||k>=g.from))return'nghi';const q=REQ.find(r=>r.g===g.id&&r.tt==='duyet'&&inR(r.from,r.to,k));if(q)return q.loai;if((g.tt==='phep'||g.tt==='ban')&&inR(g.from,g.to,k))return g.tt;return'lam'};
+const XD=[],fd=k=>k?k.split('-').reverse().join('/'):'';
+const offOf=d=>{try{const k=ymd(d),o=(ST.off||[]).find(x=>inR(x.a,x.b,k));return o?(o.ly||'Nghỉ'):''}catch(e){return''}};
+const ca=(g,d,pl)=>{if(offOf(d))return[];const k=ymd(d),w=d.getDay(),Cw=CA[w]||[],mk=(c,kl)=>({i:c.id,n:c.n,s:c.s,e:c.e,k:kl||''}),bo=XD.filter(x=>x.g===g.id&&x.n===k&&x.loai==='bo').map(x=>x.i),base=(pl?eff(g,d)==='nghi':eff(g,d)!=='lam')?[]:(g.l[w]||[]).filter(id=>!bo.includes(id)).map(id=>Cw.find(c=>c.id===id)).filter(Boolean).map(c=>mk(c,(g.lk||{})[w+':'+c.id])),ex=XD.filter(x=>x.g===g.id&&x.n===k&&x.loai==='them'&&!base.some(b=>b.i===x.i)).map(x=>{const c=Cw.find(c=>c.id===x.i);return c&&mk(c,x.k)}).filter(Boolean);return[...base,...ex].sort((a,b)=>a.s<b.s?-1:a.s>b.s?1:0)};
+const rec=(g,d,i)=>R.find(r=>r.g===g.id&&r.n===ymd(d)&&r.i===i);
+const locked=n=>!!LOCK[n];
+const add=(g,d,x,src,t)=>R.push({g:g.id,n:ymd(d),i:x.i,t,src,tre:0,k:x.k||'',x:{n:x.n,s:x.s,e:x.e}});
+const tn=x=>`${x.n} (${x.s}–${x.e})`;
+const gname=id=>(GV.find(g=>g.id===id)||{ten:id}).ten;
+const init=g=>((g.ten||'?').split(' ').pop()[0]||'?').toUpperCase();
+const win=t=>{if(offOf(t))return null;const L=CA[t.getDay()]||[];if(!L.length)return null;const E=L.map(c=>+endAt(t,c.e));return[new Date(Math.min(...E)-(+ST.pre||0)*60000),new Date(Math.max(...E)+(+ST.win||0)*60000)]};
+const qTok=t=>h36((ST.daily?'D'+ymd(t):'F')+ST.v+'k').slice(0,8);
+const scanUrl=t=>(ST.url?ST.url.replace(/#.*$/,'').replace(/\/?$/,'/'):location.href.split('#')[0])+'#/quet/'+qTok(t);
+const chip=(c,t)=>`<span class="chip ${c}">${t}</span>`;
+const sec=(i,t)=>`<div class="sec rise" style="--i:${i}">${t}</div>`;
+const prog=(a,b)=>`<div class="bar"><i style="width:${b?a/b*100:0}%"></i></div>`;
+const SI={'Đã':'ok','Chưa':'clk','Đến':'wrn'};
+const stat=(i,l,v,s='',kk)=>{const k=kk||SI[l.split(' ')[0]]||'ok';return `<div class="card rise" style="--i:${i}"><span class="sb ${k}">${ic(k)}</span><div class="m">${l}</div><div class="big">${v}</div>${s}</div>`};
+const STS={lam:['Đang làm','ok'],ban:['Báo bận','w'],phep:['Nghỉ phép','w'],nghi:['Đã nghỉ việc','']};
+const stChip=s=>chip(STS[s][1],STS[s][0]);
+const reqChip=s=>({cho:chip('w','Chờ duyệt'),duyet:chip('ok','Đã duyệt'),tu:chip('','Từ chối')})[s];
+const hd=(t,s,a='')=>`<div class="ph rise"><div><h1>${t}</h1><p class="sub">${s}</p></div><div class="pa">${a}</div></div>`;
+const eb=k=>ED&&ED.k===k?`<span class="chip w">Đang chỉnh sửa</span><button class="btn l" onclick="cancelEdit()">Hủy</button><button class="btn" onclick="saveEdit()">Lưu thay đổi</button>`:`<button class="btn l" onclick="startEdit('${k}')">${ic('pen')}Chỉnh sửa</button>`;
+const fr=(k,v,h='')=>`<div class="fr"><div class="fk">${k}${h?`<span class="hint">${h}</span>`:''}</div><div class="fv">${v}</div></div>`;
+const acc=(id,sm,bd,f)=>`<div class="acc${OPEN.has(id)||f?' op':''}"><button class="as" onclick="tgo('${id}',this)">${sm}${ic('chev','ch')}</button><div class="ab">${bd}</div></div>`;
+const tgo=(id,b)=>{const a=b.parentNode;a.classList.toggle('op');if(a.classList.contains('op'))OPEN.add(id);else OPEN.delete(id)};
+const bgStyle=()=>'';
+const mnav=b=>`<div class="mn"><button class="btn l sm" onclick="pm(-1)" aria-label="Tháng trước">${ic('chev','rl')}</button><b>Tháng ${b.getMonth()+1}/${b.getFullYear()}</b><button class="btn l sm" ${PM>=0?'disabled':''} onclick="pm(1)" aria-label="Tháng sau">${ic('chev','rr')}</button></div>`;
+const pm=d=>{PM+=d;refresh()};
+const setTre=(g,n,i,m)=>{if(locked(n.slice(0,7)))return toast('Tháng này đã chốt lương');const r=R.find(r=>r.g===g&&r.n===n&&r.i===i);if(r)r.tre=m};
+const refresh=()=>{const P=me&&(me.admin?PG_A:PG_G);if($('page')&&P&&P[key])$('page').innerHTML=P[key]();fillSide()};
+const bu=(gid,n,i)=>{if(locked(n.slice(0,7)))return toast('Tháng này đã chốt lương');const g=GV.find(x=>x.id===gid),d=day0(n),x=ca(g,d).find(y=>y.i===i);if(x)add(g,d,x,'bu',now());refresh()};
+const toast=m=>{const e=$('ts');e.textContent=m;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)};
+const M=(h,nc)=>{$('md').innerHTML=`<div class="ov" onclick="${nc?'':'if(event.target===this)clM()'}"><div class="mb">${h}</div></div>`;FP=nc?1:0};
+const clM=()=>{$('md').innerHTML='';FP=0};
+const ask=(t,b,ok,fn)=>{AF=fn;M(`<h2>${t}</h2><p class="m">${b}</p><div class="ma"><button class="btn l" onclick="clM()">Hủy</button><button class="btn" onclick="clM();AF()">${ok}</button></div>`)};
+document.onkeydown=e=>{if(e.key==='Escape'&&!FP)clM()};
+
+
+
+const wdOf=n=>new Date(n+'T12:00:00').getDay(),clsOf=(g,r)=>{const k=(g.lk||{})[wdOf(r.n)+':'+r.i];return k&&g.lop.includes(k)?k:(g.lop[0]||'')};
+const SNAP={};const pay=(g,n)=>{if(!locked(n))return calc(g,n);const k=n+'|'+g.id;return SNAP[k]||(SNAP[k]=calc(g,n))};
+const calc=(g,n)=>{const rs=R.filter(r=>r.g===g.id&&r.n.startsWith(n)),by={};rs.forEach(r=>{const k=(r.k&&g.lop.includes(r.k)?r.k:clsOf(g,r))||'Chưa chọn lớp',o=by[k]||(by[k]={k,n:0,rate:+(g.lr||{})[k]||0,sum:0});o.n++;o.sum+=o.rate});g.lop.forEach(k=>{if(!by[k])by[k]={k,n:0,rate:+(g.lr||{})[k]||0,sum:0}});const c=rs.length,late=rs.filter(r=>r.tre>0).length,b=Object.values(by),base=b.reduce((s,o)=>s+o.sum,0),ad=ADJ.filter(a=>a.g===g.id&&a.n===n),th=ad.filter(a=>a.loai==='thuong').reduce((s,a)=>s+a.st,0),ph=ad.filter(a=>a.loai==='phat').reduce((s,a)=>s+a.st,0);return{c,late,by:b,base,th,ph,ad,tot:base+th-ph}};
+const payRows=x=>(x.by.map(o=>fr(o.k,`${o.n} ca × ${o.rate?vnd(o.rate):'chưa đặt mức'} = ${vnd(o.sum)}`)).join('')||fr('Ca đã dạy','0 ca'))+(x.th?fr('Thưởng',vnd(x.th)):'')+(x.ph?fr('Phạt',vnd(x.ph)):'')+fr('<b>Thực nhận</b>',`<b>${vnd(x.tot)}</b>`);
+
+function loadData(m){const S=m==='sample',A=[['17:45','19:15'],['19:30','21:00']],B=[['17:30','19:30'],['19:30','21:00']],n0=now(),od=k=>ymd(new Date(n0.getFullYear(),n0.getMonth(),n0.getDate()+k));
+ nid=1;rid=1;aid=1;R.length=0;REQ.length=0;ADJ.length=0;for(const k in LOCK)delete LOCK[k];
+ CA={0:[],1:[],2:[],3:[],4:[],5:[],6:[]};
+ if(S)[1,2,3,4,5].forEach(d=>CA[d]=(d%2?A:B).map(([s,e],i)=>({id:nid++,n:'Ca '+(i+1),s,e})));
+ const sp=(ds,ix)=>Object.fromEntries(ds.map(d=>[d,ix.map(i=>CA[d][i].id)])),mk=(id,ten,sdt,lop,l)=>({id,ten,sdt,lop,l,tt:'lam',from:'',to:'',gc:'',lr:{},lk:{}});
+ GV=S?[mk('GV01','Nguyễn Văn An','0901 234 567',['Toán 9A','Toán 8B'],sp([1,3,5],[0])),mk('GV02','Trần Thị Bích','0912 345 678',['Anh văn 6A','Anh văn 7B'],{...sp([1,5],[0]),...sp([2,4],[1]),...sp([3],[0,1])}),mk('GV03','Lê Minh Châu','0923 456 789',['Văn 9A'],sp([2,4],[0])),mk('GV04','Phạm Quốc Dũng','0987 654 321',['Lý 8A','Lý 9B'],sp([2,4],[1])),mk('GV05','Hoàng Thu Hà','0934 567 890',['Hóa 9A'],sp([1,3,5],[1])),mk('GV06','Vũ Đức Huy','0933 222 111',['Anh văn 9A'],sp([2,4],[0,1]))]:[];
+ for(const k in PW)delete PW[k];for(const k in MUST)delete MUST[k];for(const k in EX)delete EX[k];
+ PW.admin='admin123';GV.forEach(g=>PW[g.id.toLowerCase()]='123456');
+ if(S){[1,2,3,4,5,6].forEach(a=>EX[a]=1);
+  Object.assign(GV[5],{tt:'phep',from:od(-1),to:od(3),gc:'Nghỉ ốm'});Object.assign(GV[4],{tt:'ban',from:od(5),to:od(6),gc:'Bận việc gia đình'});GV.forEach(g=>g.lop.forEach((c,j)=>{g.lr[c]=150000+j*20000}));
+  REQ.push({id:rid++,g:'GV02',loai:'phep',from:od(7),to:od(8),ly:'Việc gia đình',tt:'cho'},{id:rid++,g:'GV04',loai:'ban',from:od(2),to:od(2),ly:'Họp phụ huynh',tt:'duyet'});
+  ADJ.push({id:aid++,g:'GV01',n:ym(n0),loai:'thuong',st:200000,ly:'Hoàn thành tốt tháng'},{id:aid++,g:'GV04',n:ym(n0),loai:'phat',st:50000,ly:'Quên báo nghỉ'})}
+ ST={ten:S?'Trung tâm mẫu':'',slogan:'Quản lý chấm công đơn giản hơn.',logo:'',hue:null,daily:false,v:1,win:60,pre:0,bu:3,keep:6,url:'',auto:false,off:[]};
+ if(S)seed()}
+
+const pres=()=>{const t=now(),o=[];GV.forEach(g=>{const L=ca(g,t),on=L.find(x=>endAt(t,x.s)<=t&&t<=endAt(t,x.e)),rs=R.filter(r=>r.g===g.id&&r.n===ymd(t)).sort((a,b)=>b.t-a.t),rc=rs[0]&&t-rs[0].t>=0&&t-rs[0].t<=30*60000?rs[0]:null;if(on)o.push([g,'Đang dạy '+on.n]);else if(rc)o.push([g,'Vừa chấm công '+hm(rc.t)])});return o};
+const presHtml=()=>{const o=pres();return `<button class="phd" onclick="tgPres()"><span>Hoạt động</span><b>${o.length}</b>${ic('chev','ch'+(PO?' up':''))}</button>${PO?`<div class="pl">${o.length?o.slice(0,8).map(([g,s])=>`<div class="pi"><span class="pav">${init(g)}<i></i></span><div><b>${g.ten}</b><small>${s}</small></div></div>`).join('')+(o.length>8?`<div class="pm">và ${o.length-8} người khác</div>`:''):'<div class="pm">Chưa có ai hoạt động</div>'}</div>`:''}`};
+const tgPres=()=>{PO=!PO;try{localStorage.setItem('po',PO?'1':'0')}catch(e){}fillSide()};
+const fillSide=()=>{const e=$('pres');if(e)e.innerHTML=presHtml();const bn=$('bdn');if(bn){const n=nCount();bn.textContent=n||'';bn.style.display=n?'':'none'}};
+
+function DT(){try{return Object.assign({img:'',h:null,s:null},JSON.parse(localStorage.getItem('th:dev')||'{}'))}catch(e){return{img:'',h:null,s:null}}}
+function applyTheme(){const r=document.documentElement.style,b=document.body;
+ ['--brand','--bd','--bg','--bgo','--line','--s1','--s2','--st','--sx','--sm','--l1','--l2','--t1','--t2','--t3','--n1','--n2'].forEach(k=>r.removeProperty(k));
+ b.classList.remove('im');b.style.backgroundImage='';
+ const hue=TH.h!==null?TH.h:(ST.hue==null?null:ST.hue);
+ if(hue===null)return;
+ const h=hue,s=Math.max(.45,Math.min(.9,TH.h!==null&&TH.s!=null?TH.s:.8)),c=(l,k)=>`hsl(${h} ${Math.round((k==null?s:k)*100)}% ${Math.round(l*100)}%)`,set=(k,v)=>r.setProperty(k,v);
+ let l=.42;while(l>.2&&ctr(hsl2rgb(h,s,l),[255,255,255])<4.5)l-=.02;
+ set('--brand',c(.52));set('--bd',c(l));set('--bg',c(.965,Math.min(s,.6)));set('--bgo',c(.9,s*.5));set('--line',c(.9,s*.3));
+ set('--s1',c(.27,s*.8));set('--s2',c(.19,s*.8));set('--st','rgba(255,255,255,.8)');set('--sx','#fff');set('--sm','rgba(255,255,255,.12)');
+ set('--l1',c(.6));set('--l2',c(.46));set('--t1',c(.97,s*.7));set('--t2',c(.92,s*.7));set('--t3',c(.88,s*.7));set('--n1',c(.94,s*.25));set('--n2',c(.9,s*.25))}
+function dom(cv){const t=document.createElement('canvas');t.width=t.height=32;const x=t.getContext('2d');x.drawImage(cv,0,0,32,32);const d=x.getImageData(0,0,32,32).data;let sr=0,sg=0,sb=0,sw=0,r2=0,g2=0,b2=0,n=0;
+ for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b),sat=mx?(mx-mn)/mx:0,lg=(mx+mn)/510,w=sat*sat*Math.max(.05,1-Math.abs(lg-.5)*1.6);sr+=r*w;sg+=g*w;sb+=b*w;sw+=w;r2+=r;g2+=g;b2+=b;n++}
+ return rgb2hs(sw>.5?[sr/sw,sg/sw,sb/sw]:[r2/n,g2/n,b2/n])}
+const hasAcc=id=>{id=id.trim().toLowerCase();return id==='admin'||GV.some(g=>g.id.toLowerCase()===id)};
+function pv(v){if(hasAcc(v))loadTheme(v.trim());else{TH=DT();applyTheme()}
+ const lp=document.querySelector('.lp');if(!lp)return;lp.style.cssText=bgStyle();const dc=lp.querySelector('.dc');if(dc)dc.style.display=''}
+const HUES=[['Mặc định',null],['Đỏ',2],['Hồng',335],['Tím',265],['Xanh dương',215],['Xanh ngọc',175],['Xanh lá',140]];
+const themeM=()=>M(`<h2>Giao diện của tôi</h2><p class="m" style="margin:16px 0 0">Màu chủ đạo</p><div class="swr">${HUES.map(([n,h])=>`<button class="swb${TH.h===h?' on':''}" title="${n}" style="background:${h===null?(ST.hue==null?'#ff7a1a':`hsl(${ST.hue} 80% 50%)`):`hsl(${h} 80% 50%)`}" onclick="setHue(${h})"></button>`).join('')}</div><p class="m" style="margin-top:12px">Áp dụng ngay cho cả bên trong và trang đăng nhập (khi bạn nhập mã đăng nhập của mình). Chỉ lưu trên thiết bị này và chỉ hiện với tài khoản của bạn.</p><div class="ma"><button class="btn l" onclick="resetTheme()">Dùng mặc định</button><button class="btn" onclick="clM()">Xong</button></div>`);
+const afterTheme=()=>{saveTheme();applyTheme();if($('md')&&$('md').innerHTML)themeM();refresh()};
+const setHue=h=>{TH.h=h;if(h!==null&&TH.s==null)TH.s=.8;afterTheme()};
+const resetTheme=()=>{TH=DT();afterTheme();toast('Đã dùng giao diện mặc định')};
+
+function seed(){const t=now();for(let day=1;day<=t.getDate();day++){const d=new Date(t.getFullYear(),t.getMonth(),day),past=day<t.getDate();GV.forEach((g,gi)=>ca(g,d).forEach(x=>{if(past?(day+gi)%6===0:gi%2===1)return;const e=endAt(d,x.e);e.setMinutes(e.getMinutes()+3+(day+gi)%7);add(g,d,x,'quet',e)}))}}
+const ms=(g,t)=>{let ok=0,tot=0,late=0;for(let day=1;day<=t.getDate();day++){const d=new Date(t.getFullYear(),t.getMonth(),day);ca(g,d).forEach(x=>{const r=rec(g,d,x.i);if(r){ok++;tot++;if(r.tre)late++}else if(endAt(d,x.e)<=t)tot++})}return{ok,tot,late}};
+
+
+function fakeQr(sd){const N=25,g=[];let s=Math.abs([...sd].reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7))%2147483646+1;const r=()=>(s=(s*16807)%2147483647)/2147483647;
+ for(let y=0;y<N;y++){g[y]=[];for(let x=0;x<N;x++)g[y][x]=r()>.52}
+ [[0,0],[N-7,0],[0,N-7]].forEach(([ox,oy])=>{for(let y=-1;y<8;y++)for(let x=-1;x<8;x++){const X=ox+x,Y=oy+y;if(X<0||Y<0||X>=N||Y>=N)continue;g[Y][X]=x>=0&&x<7&&y>=0&&y<7&&(x==0||x==6||y==0||y==6||(x>1&&x<5&&y>1&&y<5))}});
+ let h='';for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(g[y][x])h+=`<rect x="${x}" y="${y}" width="1" height="1"/>`;
+ return `<svg viewBox="-1 -1 ${N+2} ${N+2}" shape-rendering="crispEdges">${h}</svg>`}
+
+function qr(txt){if(typeof qrcode!=='function')return fakeQr(txt);const q=qrcode(0,'M');q.addData(txt);q.make();const n=q.getModuleCount();let h='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))h+=`<rect x="${c}" y="${r}" width="1" height="1"/>`;return `<svg viewBox="-4 -4 ${n+8} ${n+8}" shape-rendering="crispEdges">${h}</svg>`}
+
+
+const deco=()=>`<svg class="dc" viewBox="0 0 520 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><circle cx="470" cy="70" r="170" fill="#fff" opacity=".1"/><circle cx="470" cy="70" r="110" fill="#fff" opacity=".1"/><circle cx="40" cy="520" r="150" fill="#fff" opacity=".08"/><g fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2"><circle cx="440" cy="360" r="60"/><circle cx="440" cy="360" r="100"/><circle cx="440" cy="360" r="140"/></g><path d="M0 560C120 520 220 590 330 560S480 520 520 540V640H0Z" fill="#000" opacity=".12"/><path d="M0 600C140 570 240 630 360 600S490 580 520 590V640H0Z" fill="#fff" opacity=".16"/></svg>`;
+
+const brand=()=>ST.logo?`<img class="lg2" src="${ST.logo}" alt="">`:`<i>${ic('ok')}</i>`;
+const ulSl=s=>s.replace(/(\S+\s+\S+)(\.?)$/,'<span class="ul">$1<svg viewBox="0 0 200 12" preserveAspectRatio="none"><path d="M3 8C50 2 120 12 197 4"/></svg></span>$2');
+const login=()=>`<div class="lgn"><div class="lc"><section class="lf"><div class="lb">${brand()}${ST.ten||'Chấm công QR'}</div><p class="m" style="text-align:center;margin:-14px 0 22px">Hệ thống quản lý chấm công nhân viên bằng mã QR</p><h1>Chào mừng trở lại</h1><p class="sub">Vui lòng đăng nhập vào tài khoản của bạn</p><form onsubmit="doLogin(event)"><label>Mã đăng nhập<input class="in" id="u" autocomplete="username" placeholder="Ví dụ: GV02" oninput="pv(this.value)"></label><label>Mật khẩu<div class="pw"><input class="in" id="pw" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu"><button type="button" onclick="eye()" title="Hiện mật khẩu">${ic('eye')}</button></div></label><div class="rw"><label class="ck"><input type="checkbox" checked>Ghi nhớ đăng nhập</label><a href="#" onclick="forgot();return false">Quên mật khẩu?</a></div><p class="er" id="er"></p><button class="btn lgb">Đăng nhập</button></form><div class="dv">Đăng nhập nhanh để thử</div><div class="dm"><button onclick="quick('admin')">Admin</button>${GV.length?`<button onclick="quick('${(GV.find(g=>g.id==='GV02')||GV[0]).id}')">Giáo viên</button>`:''}</div><p class="m" style="text-align:center;margin-top:10px;font-size:12px">Mật khẩu mẫu: admin123 (admin)${GV.length?', 123456 (giáo viên)':''}</p><p class="m" style="text-align:center;margin-top:18px">Chưa có tài khoản? Liên hệ quản trị viên.</p></section></div></div>`;
+const fill=(u,w)=>{$('u').value=u;$('pw').value=w;$('er').textContent=''};
+const quick=u=>{fill(u,PW[u.toLowerCase()]);pv(u);doLogin({preventDefault(){}})};
+const eye=()=>{const i=$('pw');i.type=i.type==='password'?'text':'password'};
+const forgot=()=>{$('er').textContent='Liên hệ quản trị viên để đặt lại mật khẩu.'};
+function doLogin(e){e.preventDefault();const u=$('u').value.trim().toLowerCase(),w=$('pw').value,g=GV.find(x=>x.id.toLowerCase()===u),a=u==='admin'?ADM:g,ok=a&&PW[u]===w?a:null;
+ if(!ok||ok.tt==='nghi'){$('er').textContent=ok?'Tài khoản đã ngừng hoạt động.':'Sai mã đăng nhập hoặc mật khẩu.';const f=document.querySelector('.lf form');f.classList.remove('sk');void f.offsetWidth;f.classList.add('sk');return}
+ me=ok;loadTheme(me.id);const nx=nxt;nxt='';if(MUST[u])go('thong-tin').then(()=>pwM(1));else go(nx&&!me.admin?nx:me.admin?'hom-nay':'cham-cong')}
+const pwM=f=>M(`<h2>Đổi mật khẩu</h2>${f?'<p class="m" style="margin-bottom:12px">Bạn đang dùng mật khẩu tạm. Hãy đặt mật khẩu mới để tiếp tục.</p>':''}<form onsubmit="chPw(event)"><label class="lbl2">Mật khẩu hiện tại<input class="in" id="pw0" type="password" autocomplete="current-password"></label><label class="lbl2">Mật khẩu mới<input class="in" id="pw1" type="password" autocomplete="new-password" oninput="onpw(this.value)"></label><div class="meter"><i id="mi"></i></div><p class="m" id="ml" style="margin-bottom:14px">Tối thiểu 6 ký tự, nên có cả chữ và số.</p><label class="lbl2">Nhập lại mật khẩu mới<input class="in" id="pw2" type="password" autocomplete="new-password"></label><p class="er" id="pm"></p><div class="ma">${f?'':'<button type="button" class="btn l" onclick="clM()">Hủy</button>'}<button class="btn">Đổi mật khẩu</button></div></form>`,f);
+const onpw=v=>{const n=(v.length>=6)+(v.length>=10)+(/\d/.test(v)&&/[a-zA-Z]/.test(v))+(/[A-Z]/.test(v)&&/[^a-zA-Z0-9]/.test(v)||v.length>=14),i=$('mi');i.style.width=n*25+'%';i.style.background=['#e03131','#e03131','#f08c00','#0b8a63','#0b8a63'][n];$('ml').textContent=['Tối thiểu 6 ký tự, nên có cả chữ và số.','Yếu','Trung bình','Khá mạnh','Mạnh'][n]};
+function chPw(e){e.preventDefault();const k=me.id.toLowerCase(),a=$('pw0').value,b=$('pw1').value,c=$('pw2').value,m=$('pm');m.style.color='#d92d20';
+ if(a!==PW[k])return m.textContent='Mật khẩu hiện tại không đúng.';
+ if(b.length<6)return m.textContent='Mật khẩu mới cần ít nhất 6 ký tự.';
+ if(b===a)return m.textContent='Mật khẩu mới phải khác mật khẩu cũ.';
+ if(b!==c)return m.textContent='Hai mật khẩu mới chưa khớp.';
+ PW[k]=b;MUST[k]=false;m.style.color='var(--ok)';m.textContent='Đã đổi mật khẩu thành công.';setTimeout(clM,900)}
+
+
+function result(){const r=res,t=r.t;
+ if(r.k==='ok')return `<div class="card res ok rise"><div class="stamp">ĐÃ CHẤM<br>CÔNG</div><div><h2>Bạn đã chấm công thành công!</h2><dl><dt>Họ tên</dt><dd>${me.ten}</dd><dt>Ngày</dt><dd>${dt(t)}</dd><dt>Giờ quét</dt><dd>${hm(t)}</dd><dt>Ca</dt><dd>${r.ca.map(tn).join('<br>')}</dd></dl><p style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><select id="tre">${[5,10,15,30].map(m=>`<option>${m}</option>`).join('')}</select> phút <button class="btn l sm" onclick="setTre('${me.id}','${ymd(t)}',${r.ca[0].i},+$('tre').value);this.textContent='Đã báo trễ'">Báo đến trễ</button></p></div></div>`;
+ return `<div class="card res w rise"><div><h2>${{dup:'Hôm nay bạn đã chấm công rồi',early:'Chưa hết ca',none:'Hôm nay bạn không có ca',off:'Mã chưa hoạt động',bad:'Mã QR không hợp lệ'}[r.k]}</h2><p class="m">${r.msg}</p></div></div>`}
+async function doScan(tok){const q=$('qw');if(q){q.classList.add('scan');await sleep(950)}
+ const t=now(),L=ca(me,t),w=win(t),todo=L.filter(x=>endAt(t,x.e)<=t&&!rec(me,t,x.i));
+ if(tok!==qTok(t))res={k:'bad',t,msg:'Mã QR không đúng hoặc đã bị đổi. Hãy quét mã mới ở lối ra.'};
+ else if(!w||t<w[0]||t>w[1])res={k:'off',t,msg:w?`Mã chỉ hoạt động từ ${hm(w[0])} đến ${hm(w[1])} hôm nay.`:offOf(t)?`Hôm nay trung tâm nghỉ (${offOf(t)}).`:'Hôm nay trung tâm không có ca nên mã chưa hoạt động.'};
+ else if(!L.length)res={k:'none',t,msg:dt(t)};
+ else if(todo.length){todo.forEach(x=>add(me,t,x,'quet',t));res={k:'ok',t,ca:todo}}
+ else{const w2=L.find(x=>!rec(me,t,x.i));res=w2?{k:'early',t,msg:`${tn(w2)} kết thúc lúc ${w2.e}. Hãy quét lại sau khi hết ca.`}:{k:'dup',t,msg:`Lúc ${hm(rec(me,t,L[0].i).t)}, ${dt(t)}.`}}
+ if($('page')&&key==='cham-cong')$('page').innerHTML=pCham()}
+
+
+const wk=g=>{const r=DAYS.map(d=>{const L=(g.l[d]||[]).map(id=>(CA[d]||[]).find(c=>c.id===id)).filter(Boolean);return L.length?`<div class="wr"><b class="wd">${DN[d]}</b><div class="ws">${L.map(c=>`<span class="sh">${c.n}<small>${c.s}–${c.e}</small></span>`).join('')}</div></div>`:''}).join('');return r?`<div class="wk">${r}</div>`:'<p class="m">Chưa có lịch dạy.</p>'};
+function pTt(){const e=ED&&ED.k==='tt',D=e?ED.d:null,t=now();
+ const head=pfHead(me);
+ const rows=me.admin?fr('Họ tên',e?`<input class="ti" value="${D.ten}" oninput="ED.d.ten=this.value">`:me.ten):fr('Số điện thoại',e?`<input class="ti" type="tel" value="${D.sdt}" placeholder="Bắt buộc" oninput="ED.d.sdt=this.value">`:me.sdt)+fr('Lớp dạy',me.lop.map(x=>chip('',x)).join(' ')||'<span class="m">Chưa có</span>')+fr('Trạng thái',stChip(eff(me,t)));
+ return hd(me.admin?'Tài khoản':'Thông tin của tôi','Thông tin chung và bảo mật.',eb('tt'))+sec(2,'Thông tin')+`<div class="card rise${e?' ed':''}" style="--i:3">${head}<div class="fl">${rows}</div></div>`+(me.admin?'':sec(4,'Lịch dạy trong tuần')+`<div class="card rise" style="--i:5">${wk(me)}${chgBar()}</div>`)+sec(6,'Bảo mật')+`<div class="card rise" style="--i:7"><div class="sr2"><span class="sb2">${ic('shd')}</span><div><b>Mật khẩu</b><p class="m">Chỉ bạn biết mật khẩu này.${me.admin?'':' Quên mật khẩu thì liên hệ quản trị viên để đặt lại.'}</p></div><button class="btn" onclick="pwM(0)">Đổi mật khẩu</button></div></div>`}
+
+function pCham(){const t=now(),L=ca(me,t),s=ms(me,t),w=win(t),on=w&&t>=w[0]&&t<=w[1],e=eff(me,t);
+ const rows=L.map(x=>{const r=rec(me,t,x.i),ended=endAt(t,x.e)<=t;return `<div class="rw2"><b>${tn(x)}</b><div class="rg">${r?chip('ok','Đã chấm công '+hm(r.t)):chip('',ended?'Chưa chấm công':'Chưa đến giờ')}</div></div>`}).join('');
+ const card=DEMO?`<h2>Mô phỏng quét mã</h2><p class="m" style="margin-bottom:12px">Chỉ có trong bản demo. Thực tế bạn quét mã dán ở lối ra bằng camera điện thoại, không có nút này.</p><div class="qrw" id="qw">${qr(scanUrl(t))}</div>`:`<h2>Cách chấm công</h2><div class="stp"><span class="sn">1</span><span>Sau khi hết ca, mở camera điện thoại</span></div><div class="stp"><span class="sn">2</span><span>Quét mã QR dán ở lối ra</span></div><div class="stp"><span class="sn">3</span><span>Màn hình báo chấm công thành công</span></div>`;
+ return hd(`Xin chào, ${me.ten}`,`${dt(t)}, ${hm(t)}`)+(res?result():'')+(e!=='lam'?`<div class="card rise note">${stChip(e)}<span>Hôm nay bạn ${e==='phep'?'đang nghỉ phép':e==='ban'?'đã báo bận':'đã nghỉ việc'}, hệ thống không tính ca của bạn.</span></div>`:'')+sec(2,'Tháng này')+`<div class="g3">${stat(3,'Đã xác nhận tháng này',s.ok+'/'+s.tot,prog(s.ok,s.tot))}${stat(4,'Chưa xác nhận',s.tot-s.ok)}${stat(5,'Đến trễ',s.late)}</div>`+sec(6,'Hôm nay')+`<div class="g2"><div class="card rise" style="--i:7"><h2>Ca hôm nay</h2>${L.length?rows:'<p class="m">Hôm nay bạn không có ca.</p>'}</div><div class="card rise" style="--i:8">${card}<p style="margin:12px 0">${on?chip('ok','Đang trong giờ quét'):chip('',w?`Quét được từ ${hm(w[0])} đến ${hm(w[1])}`:'Hôm nay không có ca')}</p>${DEMO?`<button class="btn" style="width:100%" onclick="doScan(qTok(now()))">Mô phỏng quét mã</button>`:''}</div></div>`}
+
+const pick=k=>{SD=k;refresh()};
+const cm=d=>{CM+=d;SD='';refresh()};
+const dayCard=(g,t)=>{if(!SD)return'<p class="m">Chọn một ngày trong lịch để xem chi tiết.</p>';const d=day0(SD),L=ca(g,d),e=eff(g,d),td=ymd(t);
+ return `<h2>${dt(d)}</h2>${e!=='lam'?`<p style="margin-bottom:10px">${stChip(e)} Không có ca trong ngày này.</p>`:''}${L.length?L.map(x=>{const r=rec(g,d,x.i),ended=endAt(d,x.e)<=t,near=Math.round((day0(td)-d)/864e5)<=ST.bu;return `<div class="rw2"><b>${tn(x)}</b><div class="rg">${r?chip('ok','✓ '+hm(r.t))+(r.src==='bu'?chip('w','xác nhận bù'):'')+(r.tre?chip('w','trễ '+r.tre+' phút'):''):!ended&&SD===td?chip('','Chưa đến giờ'):chip('w','Chưa xác nhận')+(near&&!locked(SD.slice(0,7))?`<button class="btn l sm" onclick="bu('${g.id}','${SD}',${x.i})">Xác nhận bù</button>`:'')}</div></div>`}).join(''):(e==='lam'?'<p class="m">Không có ca trong ngày này.</p>':'')}`};
+function pLich(){const t=now(),td=ymd(t),b=new Date(t.getFullYear(),t.getMonth()+CM,1),y=b.getFullYear(),mo=b.getMonth(),n=new Date(y,mo+1,0).getDate();let ok=0,tot=0,late=0,h=DN.slice(1).concat(DN[0]).map(x=>`<b>${x}</b>`).join('')+'<i></i>'.repeat((b.getDay()+6)%7);
+ if(CM===0&&!SD)SD=td;
+ for(let day=1;day<=n;day++){const d=new Date(y,mo,day),k=ymd(d),f=k>td,L=f?[]:ca(me,d);L.forEach(x=>{const r=rec(me,d,x.i);if(r){ok++;tot++;if(r.tre)late++}else if(k<td||endAt(d,x.e)<=t)tot++});h+=`<button class="dy${k===td?' td':''}${f?' fu':''}${k===SD?' sl':''}" ${f?'disabled':''} onclick="pick('${k}')"><span>${day}</span><div>${L.map(x=>`<u class="${rec(me,d,x.i)?'g':k<td||endAt(d,x.e)<=t?'x':''}">${x.n.replace(/\D/g,'')||'•'}</u>`).join('')}</div></button>`}
+ return hd('Lịch của tôi',`Chọn một ngày để xem chi tiết. Quên quét? Xác nhận bù trong ${ST.bu} ngày.`)+sec(2,'Tổng quan')+`<div class="g3">${stat(3,'Đã xác nhận',ok+'/'+tot,prog(ok,tot))}${stat(4,'Chưa xác nhận',tot-ok)}${stat(5,'Đến trễ',late)}</div>`+sec(6,'Lịch trong tháng')+`<div class="card rise" style="--i:7"><div class="cn"><button class="btn l sm" onclick="cm(-1)" aria-label="Tháng trước">${ic('chev','rl')}</button><b>Tháng ${mo+1}/${y}</b><button class="btn l sm" ${CM>=0?'disabled':''} onclick="cm(1)" aria-label="Tháng sau">${ic('chev','rr')}</button></div><div class="leg"><span><u class="g"></u>Đã xác nhận</span><span><u class="x"></u>Chưa xác nhận</span></div><div class="cal">${h}</div></div>`+sec(8,'Chi tiết ngày')+`<div class="card rise" style="--i:9">${dayCard(me,t)}</div>`}
+
+function pDonG(){const k=ymd(now()),mine=REQ.filter(r=>r.g===me.id).sort((a,b)=>b.id-a.id);
+ return hd('Báo nghỉ / bận','Gửi đơn để trung tâm biết trước. Trong thời gian đã duyệt, hệ thống không tính ca của bạn.')+sec(2,'Gửi đơn mới')+`<div class="card rise" style="--i:3"><div class="fl">${fr('Loại','<select class="ti" id="rq0"><option value="phep">Nghỉ phép</option><option value="ban">Báo bận</option></select>')}${fr('Từ ngày',`<input class="ti" type="date" id="rq1" value="${k}">`)}${fr('Đến ngày',`<input class="ti" type="date" id="rq2" value="${k}">`)}${fr('Lý do','<input class="ti" id="rq3" placeholder="Không bắt buộc">')}</div><div class="ma"><button class="btn" onclick="sendReq()">Gửi đơn</button></div></div>`+sec(4,'Đơn của tôi')+`<div class="card rise" style="--i:5">${mine.length?mine.map(r=>`<div class="rw2"><div><b>${r.loai==='phep'?'Nghỉ phép':'Báo bận'}</b><div class="m">${dmy(r.from)}${r.to!==r.from?' đến '+dmy(r.to):''}${r.ly?', '+r.ly:''}</div></div><div class="rg">${reqChip(r.tt)}${r.tt==='cho'?`<button class="btn l sm" onclick="cancelReq(${r.id})">Hủy đơn</button>`:''}</div></div>`).join(''):'<p class="m">Chưa có đơn nào.</p>'}</div>`}
+function sendReq(){const a=$('rq1').value,b=$('rq2').value;if(!a||!b||b<a)return toast('Ngày chưa hợp lệ');REQ.push({id:rid++,g:me.id,loai:$('rq0').value,from:a,to:b,ly:$('rq3').value.trim(),tt:ST.auto?'duyet':'cho'});toast(ST.auto?'Đã ghi nhận đơn của bạn':'Đã gửi đơn, chờ quản trị viên duyệt');refresh()}
+const cancelReq=id=>ask('Hủy đơn này?','Đơn sẽ bị xóa khỏi danh sách.','Hủy đơn',()=>{const i=REQ.findIndex(r=>r.id===id);if(i>=0)REQ.splice(i,1);refresh()});
+
+function pLuongG(){const t=now(),b=new Date(t.getFullYear(),t.getMonth()+PM,1),n=ym(b),x=pay(me,n),lk=locked(n);
+ return hd('Lương của tôi',lk?'Bảng lương tháng này đã chốt.':'Tạm tính từ các ca đã chấm công, có thể thay đổi đến khi chốt.',mnav(b))+sec(2,'Tổng quan')+`<div class="g3">${stat(3,'Thực nhận',vnd(x.tot),'','pay')}${stat(4,'Số ca đã dạy',x.c,'','ok')}${stat(5,'Số lần đến trễ',x.late,'','wrn')}</div>`+sec(6,'Chi tiết')+`<div class="card rise" style="--i:7"><div class="fl">${payRows(x)}</div>${x.ad.length?`<h2 style="margin:18px 0 8px">Thưởng và phạt</h2>${x.ad.map(a=>`<div class="rw2"><div><b>${a.ly||(a.loai==='thuong'?'Thưởng':'Phạt')}</b></div><div class="rg">${chip(a.loai==='thuong'?'ok':'w',(a.loai==='thuong'?'+ ':'- ')+vnd(a.st))}</div></div>`).join('')}`:''}</div>`}
+
+const okPhone=s=>(s||'').replace(/\D/g,'').length>=9;
+const startEdit=k=>{ED={k,d:clone(k==='gv'||k==='lg'?GV:k==='ca'?CA:k==='tt'?(me.admin?{ten:me.ten}:{sdt:me.sdt||''}):ST)};refresh()};
+const cancelEdit=()=>{ED=null;refresh()};
+function saveEdit(){const{k,d}=ED;
+ if(k==='gv'){if(d.some(g=>!g.ten.trim()))return toast('Tên giáo viên không được để trống');const bad=d.find(g=>!okPhone(g.sdt));if(bad){OPEN.add(bad.id);GQ={q:'',st:'all',n:Math.max(GQ.n,d.length)};refresh();return toast(`Cần nhập số điện thoại cho ${bad.ten}`)}
+  GV=d;me=GV.find(g=>g.id===me.id)||me;GV.forEach(g=>{const i=g.id.toLowerCase();if(!(i in PW)){PW[i]='123456';MUST[i]=true}})}
+ if(k==='lg'){Object.keys(LOCK).forEach(n=>GV.forEach(g=>pay(g,n)));d.forEach(g=>{const o=GV.find(x=>x.id===g.id);if(o){o.lop=g.lop;o.lr=g.lr;o.lk=g.lk}})}
+  if(k==='ca'){for(const x in d){d[x].sort((a,b)=>a.s.localeCompare(b.s));const L=d[x];for(let i=0;i<L.length;i++){if(!L[i].s||!L[i].e||L[i].e<=L[i].s)return toast(`${DN[x]}: giờ kết thúc phải sau giờ bắt đầu`);if(i&&L[i].s<L[i-1].e)return toast(`${DN[x]}: hai ca bị trùng giờ`)}}CA=d;GV.forEach(g=>{for(const x in g.l)g.l[x]=g.l[x].filter(id=>CA[x].some(c=>c.id===id))})}
+ if(k==='cd'){if(!d.ten.trim())return toast('Tên trung tâm không được để trống');if(d.win<0||d.pre<0||d.bu<0||d.keep<1)return toast('Giá trị chưa hợp lệ');ST=d;applyTheme()}
+ if(k==='tt'){if(me.admin){if(!d.ten.trim())return toast('Tên không được để trống');me.ten=d.ten}else{if(!okPhone(d.sdt))return toast('Số điện thoại là bắt buộc');me.sdt=d.sdt}}
+ ED=null;toast('Đã lưu thay đổi');refresh()}
+
+const rstAsk=id=>ask('Đặt lại mật khẩu?',`${gname(id)} sẽ nhận mật khẩu tạm và phải đổi mật khẩu khi đăng nhập lần tới. Bạn không xem được mật khẩu của giáo viên.`,'Đặt lại',()=>{const k=id.toLowerCase(),tmp=String(100000+Math.floor(Math.random()*900000));PW[k]=tmp;MUST[k]=true;M(`<h2>Mật khẩu tạm của ${gname(id)}</h2><div class="big" style="margin:14px 0;letter-spacing:.08em">${tmp}</div><p class="m">Chỉ hiện một lần. Hãy gửi cho giáo viên.</p><div class="ma"><button class="btn" onclick="clM()">Xong</button></div>`)});
+
+const schEdit=(g,i)=>`<div class="wk">${DAYS.filter(d=>(CA[d]||[]).length).map(d=>`<div class="wr"><b class="wd">${DN[d]}</b><div class="ws">${CA[d].map((c,j)=>`<button class="tg${(g.l[d]||[]).includes(c.id)?' on':''}" title="${c.n} ${c.s}–${c.e}${(g.lk||{})[d+':'+c.id]?' · '+g.lk[d+':'+c.id]:''}" onclick="tog(${i},${d},${c.id})">${j+1}</button>`).join('')}</div></div>`).join('')||'<p class="m">Chưa có ca nào. Hãy tạo lịch ca trước.</p>'}</div>`;
+const gvRow=(g,i,s,e)=>{const sm=`${avH(g)}<span class="nmv"><b>${g.ten||'Giáo viên mới'}</b><small>${g.lop.length?g.lop.slice(0,2).join(', ')+(g.lop.length>2?' +'+(g.lop.length-2):''):'Chưa có lớp'}</small></span>${stChip(s)}`;
+ const stDet=e?`<select class="ti" onchange="ED.d[${i}].tt=this.value;gvRefresh()">${Object.entries(STS).map(([k,v])=>`<option value="${k}"${g.tt===k?' selected':''}>${v[0]}</option>`).join('')}</select>${g.tt!=='lam'?`<div class="dr"><input class="ti" type="date" value="${g.from}" oninput="ED.d[${i}].from=this.value">${g.tt==='nghi'?'':`<span>đến</span><input class="ti" type="date" value="${g.to}" oninput="ED.d[${i}].to=this.value">`}</div><input class="ti" style="margin-top:8px" value="${g.gc}" placeholder="Ghi chú" oninput="ED.d[${i}].gc=this.value">`:''}`:`${stChip(s)}${g.tt!=='lam'?`<div class="m" style="margin-top:4px">${g.tt==='nghi'?'Từ '+dmy(g.from):dmy(g.from)+' đến '+dmy(g.to)}${g.gc?', '+g.gc:''}</div>`:''}`;
+ const none='<span class="m">Chưa có</span>';
+ const body=e?`<div class="fl">${fr('Họ tên',`<input class="ti" value="${g.ten}" placeholder="Họ tên" oninput="ED.d[${i}].ten=this.value">`)}${fr('Số điện thoại',`<input class="ti" type="tel" value="${g.sdt}" placeholder="Bắt buộc" oninput="ED.d[${i}].sdt=this.value">`,'Bắt buộc')}${fr('Lớp dạy',clsEd(g,i),'Mức lương từng lớp chỉnh ở tab Lương')}${fr('Trạng thái',stDet)}${fr('Lịch dạy',schEdit(g,i))}</div><div class="ma"><button class="btn l" onclick="delGv(${i})">${ic('x')}Xóa giáo viên</button></div>`
+ :`<div class="fl">${fr('Mã đăng nhập',g.id)}${fr('Số điện thoại',g.sdt||none)}${fr('Lớp dạy và lương mỗi ca',g.lop.map(c=>chip('',c+' · '+vnd((g.lr||{})[c]||0))).join(' ')||none)}${fr('Trạng thái',stDet)}${fr('Lịch dạy',wk(g))}</div><div class="ma"><button class="btn l" onclick="rstAsk('${g.id}')">Đặt lại mật khẩu</button></div>`;
+ return acc(g.id,sm,body)};
+function gvChips(){const e=ED&&ED.k==='gv',L=e?ED.d:GV,t=now(),c={lam:0,ban:0,phep:0,nghi:0};L.forEach(g=>c[eff(g,t)]++);
+ return[['all','Tất cả',L.length],['lam','Đang làm',c.lam],['ban','Báo bận',c.ban],['phep','Nghỉ phép',c.phep],['nghi','Đã nghỉ việc',c.nghi]].map(([k,n,v])=>`<button class="fch${GQ.st===k?' on':''}" onclick="GQ.st='${k}';GQ.n=20;gvRefresh()">${n}<b>${v}</b></button>`).join('')}
+function gvList(){const e=ED&&ED.k==='gv',L=e?ED.d:GV,t=now(),q=GQ.q.trim().toLowerCase();
+ const rows=L.map((g,i)=>({g,i,s:eff(g,t)})).filter(({g,s})=>(GQ.st==='all'||s===GQ.st)&&(!q||(g.ten+' '+g.sdt+' '+g.id+' '+g.lop.join(' ')).toLowerCase().includes(q))),shown=rows.slice(0,GQ.n);
+ return(shown.length?shown.map(({g,i,s})=>gvRow(g,i,s,e)).join(''):'<p class="m" style="padding:14px 4px">Không có giáo viên phù hợp.</p>')+(rows.length>shown.length?`<div style="text-align:center;margin-top:12px"><button class="btn l" onclick="GQ.n+=20;gvRefresh()">Xem thêm ${Math.min(20,rows.length-shown.length)} giáo viên</button></div>`:'')}
+const gvRefresh=()=>{const a=$('tl'),b=$('gc');if(a)a.innerHTML=gvList();if(b)b.innerHTML=gvChips()};
+function pGv(){const e=ED&&ED.k==='gv';
+ return hd('Giáo viên','Quản lý thông tin, trạng thái và lịch dạy. Bấm vào một giáo viên để mở chi tiết.',eb('gv'))+`<div class="card rise${e?' ed':''}" style="--i:2"><div class="tbr"><div class="srch">${ic('search')}<input class="ti" id="gq" placeholder="Tìm theo tên, số điện thoại, lớp..." value="${GQ.q}" oninput="GQ.q=this.value;GQ.n=20;gvRefresh()"></div>${e?`<button class="btn l sm" onclick="addGv()">${ic('plus')}Thêm giáo viên</button><label class="btn l sm">${ic('dl')}Nhập CSV<input type="file" accept=".csv,text/csv" hidden onchange="impCsv(this.files[0])"></label>`:''}</div><div class="fc" id="gc">${gvChips()}</div>${e?'<p class="m" style="margin-top:8px">CSV gồm 3 cột: Họ tên, Số điện thoại (bắt buộc), Lớp dạy (cách nhau bằng dấu chấm phẩy).</p>':''}<div class="tl" id="tl">${gvList()}</div></div>`}
+const tog=(i,d,id)=>{const g=ED.d[i],a=g.l[d]||[],on=a.includes(id),k=d+':'+id;g.l[d]=on?a.filter(x=>x!==id):[...a,id];g.lk=g.lk||{};if(on)delete g.lk[k];else if(g.lop.length){const s=(ED.pc||{})[i];g.lk[k]=s&&g.lop.includes(s)?s:g.lop[0]}gvRefresh()};
+const clsAdd=i=>{const g=ED.d[i];g.lop.push('Lớp mới'+(g.lop.length?' '+(g.lop.length+1):''));rf2()};
+const clsDel=(i,j)=>{const g=ED.d[i],c=g.lop[j];g.lop.splice(j,1);delete g.lr[c];for(const k in g.lk)if(g.lk[k]===c)delete g.lk[k];rf2()};
+const clsSet=(i,j,v)=>{const g=ED.d[i],o=g.lop[j];v=v.trim();if(!v||g.lop.includes(v)&&v!==o){toast('Tên lớp không được trống hoặc trùng');rf2();return}g.lop[j]=v;if(o!==v){g.lr[v]=g.lr[o];delete g.lr[o];for(const k in g.lk)if(g.lk[k]===o)g.lk[k]=v}};
+const rateSet=(i,j,v)=>{const g=ED.d[i];g.lr[g.lop[j]]=v===''?0:Math.max(0,+v)};
+const pcSet=(i,j)=>{ED.pc=ED.pc||{};ED.pc[i]=ED.d[i].lop[j];rf2()};
+const clsEd=(g,i,m)=>`<div class="cls">${g.lop.map((c,j)=>`<div class="un cr"><input class="ti" style="flex:2 1 120px;min-width:0" value="${c}" placeholder="Tên lớp" onchange="clsSet(${i},${j},this.value)">${m==='lg'?`<input class="ti" style="flex:1 1 90px;min-width:0" type="number" min="0" value="${(g.lr||{})[c]||''}" placeholder="0" oninput="rateSet(${i},${j},this.value)"><span>đ/ca</span>`:''}<button class="btn l" title="Xóa lớp" onclick="clsDel(${i},${j})">${ic('x')}</button></div>`).join('')||'<p class="m">Chưa có lớp nào.</p>'}<button class="btn l" onclick="clsAdd(${i})">+ Thêm lớp</button>${m!=='lg'&&g.lop.length>1?`<p class="m" style="margin:10px 0 4px">Chọn lớp rồi bấm vào ca trong "Lịch dạy" để gán ca đó cho lớp:</p><div class="swr">${g.lop.map((c,j)=>`<button class="btn l${(((ED&&ED.pc)||{})[i]||g.lop[0])===c?' on':''}" onclick="pcSet(${i},${j})">${c}</button>`).join('')}</div>`:''}</div>`;
+const rf2=()=>ED&&ED.k==='lg'?refresh():gvRefresh();
+const newId=()=>'GV'+p(Math.max(0,...ED.d.map(g=>+g.id.slice(2)||0))+1);
+const blank=(id,ten,sdt,lop)=>({id,ten,sdt,lop,l:{},tt:'lam',from:'',to:'',gc:'',lr:{},lk:{}});
+const addGv=()=>{const id=newId();ED.d.push(blank(id,'','',[]));OPEN.add(id);GQ={q:'',st:'all',n:Math.max(GQ.n,ED.d.length)};refresh()};
+const delGv=i=>ask('Xóa giáo viên?',`${ED.d[i].ten||'Giáo viên này'} sẽ bị xóa khỏi danh sách. Dữ liệu chấm công cũ vẫn được giữ.`,'Xóa',()=>{ED.d.splice(i,1);gvRefresh()});
+function impCsv(f){if(!f)return;const r=new FileReader();r.onload=()=>{let n=0,sk=0;r.result.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim()).forEach((ln,i)=>{const c=ln.split(',').map(x=>x.trim());if(!c[0]||(i===0&&/^(họ tên|ho ten|tên|name)/i.test(c[0])))return;if(!okPhone(c[1])){sk++;return}ED.d.push(blank(newId(),c[0],c[1],(c[2]||'').split(';').map(x=>x.trim()).filter(Boolean)));n++});gvRefresh();toast(`Đã nhập ${n} giáo viên${sk?`, bỏ qua ${sk} dòng thiếu số điện thoại`:''}`)};r.readAsText(f)}
+
+const setup=()=>{const st=[[!!ST.ten.trim(),'Đặt tên trung tâm','cai-dat'],[DAYS.some(d=>(CA[d]||[]).length>0),'Tạo lịch ca','ca'],[GV.length>0,'Thêm giáo viên và xếp lịch dạy','giao-vien'],[0,'In mã QR và dán ở lối ra','ma-qr']];if(st.slice(0,3).every(x=>x[0]))return '';return sec(2,'Bắt đầu thiết lập')+`<div class="card rise" style="--i:3">${st.map((x,i)=>`<div class="stp"><span class="sn${x[0]?' d':''}">${x[0]?ic('ok'):i+1}</span><span>${x[1]}</span><button class="btn l sm" onclick="go('${x[2]}')">${x[0]?'Xem':'Làm ngay'}</button></div>`).join('')}</div>`};
+function pHom(){const t=now();let tot=0,ok=0,late=0;MISS=[];const gr={};
+ GV.forEach(g=>ca(g,t).forEach(x=>{tot++;const r=rec(g,t,x.i),ended=endAt(t,x.e)<=t;if(r){ok++;if(r.tre)late++}else if(ended)MISS.push(g.ten);(gr[x.i]=gr[x.i]||{x,rows:[]}).rows.push({g,y:x,r,ended})}));
+ const groups=Object.values(gr).sort((a,b)=>a.x.s.localeCompare(b.x.s)).map(({x,rows})=>{const done=rows.filter(o=>o.r).length,miss=rows.filter(o=>!o.r&&o.ended).length,on=endAt(t,x.s)<=t&&t<=endAt(t,x.e);
+  const body=rows.map(({g,y,r,ended})=>`<div class="rw2"><div class="who">${avH(g)}${g.ten}</div><div class="rg">${r?chip('ok','Đã chấm công '+hm(r.t))+(r.src==='bu'?chip('w','xác nhận bù'):'')+`<select class="ti sel" onchange="setTre('${g.id}','${ymd(t)}',${y.i},+this.value);refresh()"><option value="0">Đúng giờ</option>${[5,10,15,30].map(m=>`<option value="${m}"${r.tre===m?' selected':''}>Trễ ${m} phút</option>`).join('')}</select>`:ended?chip('','Chưa xác nhận')+`<button class="btn l sm" onclick="bu('${g.id}','${ymd(t)}',${y.i})">Xác nhận hộ</button>`:chip('','Chưa đến giờ')}</div></div>`).join('');
+  return acc('h'+x.i,`<b>${x.n}</b><span class="m">${x.s}–${x.e}</span>${chip(miss?'w':done===rows.length?'ok':'',done+'/'+rows.length+' đã chấm công')}${on?chip('ok','Đang diễn ra'):''}`,body,miss>0||on)}).join('');
+ const off=GV.filter(g=>(g.l[t.getDay()]||[]).length&&['phep','ban'].includes(eff(g,t)));
+ return hd('Hôm nay',`${dt(t)}, ${hm(t)}`,`<button class="btn l sm" onclick="exM()">Đổi lịch một ngày</button>`)+setup()+exCard()+sec(2,'Tổng quan')+`<div class="g3">${stat(3,'Đã chấm công',ok+'/'+tot,prog(ok,tot))}${stat(4,'Chưa xác nhận',MISS.length)}${stat(5,'Đến trễ',late)}</div>`+sec(6,'Chi tiết hôm nay')+`<div class="card rise" style="--i:7"><div class="ch"><h2>Ca hôm nay</h2><button class="btn l sm" onclick="copy(this)">Sao chép danh sách chưa chấm công</button></div>${groups||'<p class="m">Hôm nay không có ca nào.</p>'}</div>`+(off.length?`<div class="card rise" style="--i:8"><h2>Nghỉ hoặc báo bận hôm nay</h2><div class="rg" style="justify-content:flex-start">${off.map(g=>`<span class="chip w">${g.ten}, ${STS[eff(g,t)][0]}</span>`).join('')}</div></div>`:'')}
+function copy(b){navigator.clipboard&&navigator.clipboard.writeText(MISS.length?'Các thầy cô chưa chấm công hôm nay: '+[...new Set(MISS)].join(', '):'Tất cả đã chấm công hôm nay');toast('Đã sao chép danh sách');b.blur()}
+
+const decide=(id,tt)=>ask(tt==='duyet'?'Duyệt đơn này?':'Từ chối đơn này?',tt==='duyet'?'Trong thời gian này, hệ thống sẽ không tính ca của giáo viên.':'Giáo viên sẽ thấy đơn bị từ chối.',tt==='duyet'?'Duyệt':'Từ chối',()=>{const r=REQ.find(x=>x.id===id);if(r){r.tt=tt;notify(r.g,`Đơn ${r.loai==='phep'?'nghỉ phép':'báo bận'} ngày ${dmy(r.from)}${r.to!==r.from?' đến '+dmy(r.to):''} ${tt==='duyet'?'đã được duyệt':'không được duyệt'}`,{k:'rq',id:r.id})}fillSide();refresh()});
+
+function payList(){const t=now(),b=new Date(t.getFullYear(),t.getMonth()+PM,1),n=ym(b),lk=locked(n),q=PQ.trim().toLowerCase();
+ const all=GV.map(g=>({g,x:pay(g,n)})).filter(({g,x})=>g.tt!=='nghi'||x.c>0||x.ad.length),rows=all.filter(({g})=>!q||(g.ten+g.id).toLowerCase().includes(q)),shown=rows.slice(0,PN);
+ return(shown.length?shown.map(({g,x})=>acc('p'+g.id,`${avH(g)}<span class="nmv"><b>${g.ten}</b><small>${x.c} ca${x.late?`, ${x.late} lần trễ`:''}</small></span><b class="amt">${vnd(x.tot)}</b>`,`${ED&&ED.k==='lg'&&ED.only===g.id?rateEd(g):`<div class="fl">${payRows(x)}</div><div class="ma" style="margin:8px 0 0"><button class="btn l sm" onclick="rateStart('${g.id}')">${ic('pen')}Chỉnh sửa</button></div>`}${x.ad.length?`<h2 style="margin:16px 0 6px">Thưởng và phạt</h2>${x.ad.map(a=>`<div class="rw2"><div><b>${a.ly||'Điều chỉnh'}</b></div><div class="rg">${chip(a.loai==='thuong'?'ok':'w',(a.loai==='thuong'?'+ ':'- ')+vnd(a.st))}${lk?'':`<button class="btn l sm" onclick="delAdj(${a.id})" aria-label="Xóa">${ic('x')}</button>`}</div></div>`).join('')}`:''}${lk?'':`<div class="ma"><button class="btn l" onclick="adjM('${g.id}','${n}')">${ic('plus')}Thêm thưởng hoặc phạt</button></div>`}${ED&&ED.k==='lg'&&ED.only===g.id?rateSave():''}`)).join(''):'<p class="m" style="padding:14px 4px">Chưa có dữ liệu lương.</p>')+(rows.length>shown.length?`<div style="text-align:center;margin-top:12px"><button class="btn l" onclick="PN+=20;plRefresh()">Xem thêm</button></div>`:'')}
+const plRefresh=()=>{const a=$('pl');if(a)a.innerHTML=payList()};
+function pLuongA(){const t=now(),b=new Date(t.getFullYear(),t.getMonth()+PM,1),n=ym(b),lk=locked(n),all=GV.map(g=>pay(g,n)),tong=all.reduce((s,x)=>s+x.tot,0),sc=all.reduce((s,x)=>s+x.c,0);
+ return hd('Lương',lk?'Tháng này đã chốt, không thể sửa công và thưởng phạt.':'Tạm tính từ các ca đã chấm công. Chốt lương để khóa số liệu tháng.',mnav(b)+`<button class="btn l" onclick="expPay('${n}')">${ic('dl')}Xuất bảng lương</button>`+(lk?`<button class="btn l" onclick="lockAsk('${n}',0)">Mở lại</button>`:`<button class="btn" onclick="lockAsk('${n}',1)">Chốt lương</button>`))+sec(2,'Tổng quan')+`<div class="g3">${stat(3,'Tổng quỹ lương',vnd(tong),'','pay')}${stat(4,'Số ca đã dạy',sc,'','ok')}${stat(5,lk?'Đã chốt':'Đang mở',lk?'Khóa':'Mở','','shd')}</div>`+sec(6,'Chi tiết từng giáo viên')+`<div class="card rise" style="--i:7"><div class="tbr"><div class="srch">${ic('search')}<input class="ti" placeholder="Tìm giáo viên..." value="${PQ}" oninput="PQ=this.value;PN=20;plRefresh()"></div></div><div class="tl" id="pl">${payList()}</div></div>`}
+const CHG=[],NOTI=[];let TBT='ds',CGT='cho';let CH=null,SGR='tc';
+const fr2=(k,v)=>fr(k,v);
+const sgTabs=()=>`<div class="card rise" style="--i:2"><div class="fc">${[['tc','Thông tin chung'],['cc','Chấm công'],['ng','Nghỉ và duyệt'],['dl','Dữ liệu']].map(([k,n])=>`<button class="fch${SGR===k?' on':''}" onclick="SGR='${k}';refresh()">${n}</button>`).join('')}</div></div>`;
+const DAYS7=[1,2,3,4,5,6,0];
+const rnMap=P=>{const m={};P.lop.forEach((c,j)=>{if(P.src[j])m[P.src[j]]=c});return m};
+const chItems=(g,P)=>{const o=[],kept=new Set(P.src.filter(Boolean)),rn=rnMap(P);
+ P.lop.forEach((c,j)=>{if(!P.src[j])o.push({k:'add',tx:c});else if(P.src[j]!==c)o.push({k:'chg',tx:`${P.src[j]} → ${c}`})});
+ g.lop.filter(c=>!kept.has(c)).forEach(c=>o.push({k:'rem',tx:c}));
+ DAYS7.forEach(d=>(CA[d]||[]).forEach(c=>{const x=(g.l[d]||[]).includes(c.id),y=(P.l[d]||[]).includes(c.id),k=d+':'+c.id,a=P.lk[k]||'',b0=(g.lk||{})[k]||'',b=rn[b0]||b0,t=`${DN[d]} · ${c.n}`;
+  if(!x&&y)o.push({k:'add',s:1,t,tx:a});else if(x&&!y)o.push({k:'rem',s:1,t,tx:b0});else if(x&&y&&a!==b)o.push({k:'chg',s:1,t,tx:`${b0||'—'} → ${a||'—'}`})}));return o};
+const KL={add:'Thêm',rem:'Bỏ',chg:'Đổi'};
+const chDiff=(g,P)=>chItems(g,P).map(i=>`${KL[i.k]} ${i.t?i.t+' ':''}${i.tx}`);
+const chgYes=id=>{chgApply(id);clM();fillSide();refresh()};
+const chgBar=()=>{const p=CHG.find(x=>x.g===me.id&&x.tt==='cho');return `<div class="ma" style="align-items:center;justify-content:space-between">${p?chip('w','Đang chờ duyệt'):'<span></span>'}<button class="btn l" onclick="chgM()">${p?'Sửa đề xuất':'Đề xuất chỉnh sửa'}</button></div>`};
+const chgM=()=>{const p=CHG.find(x=>x.g===me.id&&x.tt==='cho');CH=p?clone({lop:p.lop,src:p.src,l:p.l,lk:p.lk,ly:p.ly}):{lop:[...me.lop],src:[...me.lop],l:clone(me.l),lk:clone(me.lk||{}),ly:''};M(`<h2>Đề xuất chỉnh sửa</h2><div id="chb">${chgBody()}</div>`)};
+const chgBody=()=>`<div class="fl">${fr('Lớp dạy',`${CH.lop.map((c,j)=>`<div class="un cr"><input class="ti" style="flex:1;min-width:0" value="${c}" onchange="chSet(${j},this.value)"><button class="btn l" title="Xóa lớp" onclick="chDel(${j})">${ic('x')}</button></div>`).join('')}<button class="btn l" onclick="chAdd()">+ Thêm lớp</button>`)}${DAYS7.filter(d=>(CA[d]||[]).length).map(d=>fr(DN[d],`<div class="swr">${CA[d].map(c=>{const on=(CH.l[d]||[]).includes(c.id),k=CH.lk[d+':'+c.id]||'';return `<button class="btn l${on?' on':''}" onclick="chTog(${d},'${c.id}')">${c.n} ${c.s}–${c.e}</button>${on&&CH.lop.length>1?`<select class="ti" style="width:auto" onchange="chK(${d},'${c.id}',this.value)">${CH.lop.map(x=>`<option${x===k?' selected':''}>${x}</option>`).join('')}</select>`:''}`}).join('')}</div>`)).join('')}${fr('Ghi chú',`<input class="ti" id="chn" value="${CH.ly||''}" placeholder="Không bắt buộc">`)}</div><div class="ma"><button class="btn l" onclick="clM()">Hủy</button><button class="btn" onclick="chSend()">Gửi duyệt</button></div>`;
+const chRf=()=>{CH.ly=$('chn').value;$('chb').innerHTML=chgBody()};
+const chAdd=()=>{CH.lop.push('Lớp mới'+(CH.lop.length?' '+(CH.lop.length+1):''));CH.src.push(null);chRf()};
+const chDel=j=>{const c=CH.lop[j];CH.lop.splice(j,1);CH.src.splice(j,1);for(const k in CH.lk)if(CH.lk[k]===c)delete CH.lk[k];chRf()};
+const chSet=(j,v)=>{v=v.trim();const o=CH.lop[j];if(!v||CH.lop.includes(v)&&v!==o){toast('Tên lớp không được trống hoặc trùng');chRf();return}CH.lop[j]=v;for(const k in CH.lk)if(CH.lk[k]===o)CH.lk[k]=v;chRf()};
+const chTog=(d,s)=>{const c=CA[d].find(c=>String(c.id)===s),a=CH.l[d]||[],on=a.includes(c.id),k=d+':'+c.id;CH.l[d]=on?a.filter(x=>x!==c.id):[...a,c.id];if(on)delete CH.lk[k];else if(CH.lop.length)CH.lk[k]=CH.lop[0];chRf()};
+const chK=(d,s,v)=>{const c=CA[d].find(c=>String(c.id)===s);CH.lk[d+':'+c.id]=v};
+const chSend=()=>{const ly=$('chn').value.trim();if(!CH.lop.length)return toast('Cần ít nhất một lớp');if(!chDiff(me,CH).length)return toast('Bạn chưa thay đổi gì');for(let i=CHG.length-1;i>=0;i--)if(CHG[i].g===me.id&&CHG[i].tt==='cho')CHG.splice(i,1);CHG.push({id:rid++,g:me.id,lop:CH.lop,src:CH.src,l:CH.l,lk:CH.lk,ly,tt:'cho'});clM();toast('Đã gửi quản trị viên duyệt');refresh()};
+const chgApply=id=>{const p=CHG.find(x=>x.id===id),g=p&&GV.find(x=>x.id===p.g);if(!g)return;const lr={};p.lop.forEach((c,j)=>{lr[c]=+(g.lr||{})[p.src[j]!=null?p.src[j]:c]||0});p.before=clone({lop:g.lop,l:g.l,lk:g.lk||{}});g.lop=p.lop;g.lr=lr;g.l=p.l;g.lk=p.lk;p.tt='duyet';notify(g.id,'Đề xuất chỉnh sửa lớp và ca dạy của bạn đã được duyệt',{k:'cg',id:p.id})};
+const chgRej=id=>{const p=CHG.find(x=>x.id===id),g=p&&GV.find(x=>x.id===p.g);if(p&&g){p.before=clone({lop:g.lop,l:g.l,lk:g.lk||{}});p.tt='tu';notify(g.id,'Đề xuất chỉnh sửa lớp và ca dạy của bạn không được duyệt',{k:'cg',id:p.id})}fillSide();refresh()};
+const chgNo=id=>ask('Từ chối đề xuất này?','Giáo viên sẽ nhận được thông báo.','Từ chối',()=>chgRej(id));
+const chgCmp=id=>{const p=CHG.find(x=>x.id===id),G=p&&GV.find(x=>x.id===p.g);if(!G)return;const g=p.before?Object.assign({},G,p.before):G;const rn=rnMap(p),kept=new Set(p.src.filter(Boolean)),B0=g.lk||{};
+ const ln=(tx,st,bd)=>`<div class="cpL${st?' '+st:''}"><span>${tx}</span>${bd?`<span class="cpB ${st}">${bd}</span>`:''}</div>`,td=h=>`<td>${h||'<span class="cpN">Không có</span>'}</td>`;
+ const o1=g.lop.map(c=>!kept.has(c)?ln(c,'rem','Sẽ bỏ lớp này'):rn[c]!==c?ln(c,'chg','Sẽ đổi tên thành '+rn[c]):ln(c)).join(''),n1=p.lop.map((c,j)=>!p.src[j]?ln(c,'add','Mới thêm'):p.src[j]!==c?ln(c,'chg','Đổi tên, trước đây là '+p.src[j]):ln(c)).join('');
+ let rows='';DAYS7.forEach(d=>{const C=CA[d]||[],B=C.filter(c=>(g.l[d]||[]).includes(c.id)),A=C.filter(c=>(p.l[d]||[]).includes(c.id));if(!B.length&&!A.length)return;let ch=0;
+  const nm=(c,k)=>`${c.n} (${c.s} đến ${c.e})${k?', lớp '+k:''}`,
+   o=B.map(c=>{const k=d+':'+c.id,b0=B0[k]||'',a=p.lk[k]||'',b=rn[b0]||b0;if(!A.includes(c)){ch=1;return ln(nm(c,b0),'rem','Sẽ bỏ ca này')}if(a!==b){ch=1;return ln(nm(c,b0),'chg','Sẽ đổi sang lớp '+(a||'chưa chọn'))}return ln(nm(c,b0))}).join(''),
+   n=A.map(c=>{const k=d+':'+c.id,b0=B0[k]||'',a=p.lk[k]||'',b=rn[b0]||b0;if(!B.includes(c)){ch=1;return ln(nm(c,a),'add','Mới thêm')}if(a!==b){ch=1;return ln(nm(c,a),'chg','Đổi lớp, trước đây là '+(b0||'chưa chọn'))}return ln(nm(c,a))}).join('');
+  rows+=`<tr><td class="cpD">${W[d]}</td>${td(o)}${td(n)}</tr>`});
+ M(`<h2>Đề xuất của ${g.ten}</h2>${p.tt==='cho'?'':`<p class="ink" style="margin:0 0 12px">Trạng thái: ${p.tt==='duyet'?'Đã duyệt':'Đã từ chối'}</p>`}${p.ly?`<p class="ink" style="margin:0 0 12px">Ghi chú của giáo viên: ${p.ly}</p>`:''}<div class="cpW"><table class="cpTb cpEq"><thead><tr><th></th><th>Hiện tại</th><th>Sau khi duyệt</th></tr></thead><tbody><tr class="cpG"><td colspan="3">Lớp dạy</td></tr><tr><td class="cpD"></td>${td(o1)}${td(n1)}</tr><tr class="cpG"><td colspan="3">Lịch dạy trong tuần</td></tr>${rows||`<tr><td class="cpD"></td>${td('')}${td('')}</tr>`}</tbody></table></div>${p.tt==='cho'&&me.admin?`<div class="ma"><button class="btn l" onclick="clM()">Đóng</button><button class="btn l" onclick="chgNo(${id})">Từ chối</button><button class="btn" onclick="chgYes(${id})">Duyệt đề xuất</button></div>`:`<div class="ma"><button class="btn" onclick="clM()">Đóng</button></div>`}`)};
+const nCount=()=>me.admin?REQ.filter(r=>r.tt==='cho').length+CHG.filter(x=>x.tt==='cho').length:NOTI.filter(n=>n.to===me.id&&!n.r).length;
+const notify=(to,tx,ref)=>{NOTI.push({i:NOTI.length,to,tx,ref,t:now(),r:0});fillSide()};
+const cgRow=p=>{const g=GV.find(x=>x.id===p.g);return g?`<div class="rw2"><div class="who">${avH(g)}<div class="ink">${g.ten} <span class="ink2">đề xuất chỉnh sửa</span></div></div><button class="btn l sm" onclick="chgCmp(${p.id})">Xem chi tiết</button></div>`:''};
+const rqRow=r=>`<div class="rw2"><div class="who">${avH(GV.find(x=>x.id===r.g)||{ten:gname(r.g)})}<div><div class="ink">${gname(r.g)}</div><div class="ink2">${r.loai==='phep'?'Nghỉ phép':'Báo bận'}, ${dmy(r.from)}${r.to!==r.from?' đến '+dmy(r.to):''}${r.ly?', '+r.ly:''}</div></div></div><div class="rg">${r.tt==='cho'?`<button class="btn l sm" onclick="decide(${r.id},'tu')">Từ chối</button><button class="btn sm" onclick="decide(${r.id},'duyet')">Duyệt</button>`:reqChip(r.tt)}</div></div>`;
+function pTb(){const ds=TBT==='ds',S=ds?CHG:REQ,st=ds?CGT:RQT,L=S.filter(x=>x.tt===st).sort((a,b)=>b.id-a.id),pn=l=>l.filter(x=>x.tt==='cho').length;
+ const tabs=`<div class="card rise" style="--i:1"><div class="fc">${[['ds','Đề xuất chỉnh sửa',pn(CHG)],['don','Duyệt đơn',pn(REQ)]].map(([k,n,c])=>`<button class="fch${TBT===k?' on':''}" onclick="TBT='${k}';refresh()">${n}${c?`<b>${c}</b>`:''}</button>`).join('')}</div></div>`;
+ const chips=`<div class="fc">${[['cho','Chờ duyệt'],['duyet','Đã duyệt'],['tu','Từ chối']].map(([k,n])=>`<button class="fch${st===k?' on':''}" onclick="${ds?'CGT':'RQT'}='${k}';refresh()">${n}<b>${S.filter(x=>x.tt===k).length}</b></button>`).join('')}</div>`;
+ return hd('Thông báo','')+tabs+`<div class="card rise" style="--i:2">${chips}<div class="tl">${L.map(ds?cgRow:rqRow).join('')||'<p class="ink2" style="padding:14px 4px">Không có mục nào.</p>'}</div></div>`}
+const nTm=t=>(ymd(t)===ymd(now())?'Hôm nay':dmy(ymd(t)))+' lúc '+hm(t);
+const nRow=n=>`<div class="ntf${n.r?'':' un'}" onclick="nOpen(${n.i},this)"><div><div class="ntfX">${n.tx}</div><div class="ntfK">Xem chi tiết</div></div><div class="ntfT">${nTm(n.t)}</div></div>`;
+const nOpen=(i,el)=>{const n=NOTI[i];if(!n||!n.ref)return;n.r=1;if(el)el.classList.remove('un');fillSide();n.ref.k==='cg'?chgCmp(n.ref.id):rqView(n.ref.id)};
+const rqView=id=>{const r=REQ.find(x=>x.id===id);if(!r)return;M(`<h2>Thông tin đơn</h2><div class="fl">${fr('Loại',r.loai==='phep'?'Nghỉ phép':'Báo bận')}${fr('Từ ngày',dmy(r.from))}${fr('Đến ngày',dmy(r.to))}${fr('Lý do',r.ly||'Không ghi')}${fr('Kết quả',r.tt==='duyet'?'Đã duyệt':r.tt==='tu'?'Không được duyệt':'Chờ duyệt')}</div><div class="ma"><button class="btn" onclick="clM()">Đóng</button></div>`)};
+function pTbG(){const A=NOTI.filter(n=>n.to===me.id).sort((a,b)=>b.i-a.i);if(A.some(n=>!n.r))setTimeout(()=>{A.forEach(n=>n.r=1);fillSide()},1500);return hd('Thông báo','')+`<div class="card rise" style="padding:0;overflow:hidden">${A.map(nRow).join('')||'<p class="ink2" style="margin:0;padding:18px 16px">Chưa có thông báo nào.</p>'}</div>`}
+const pfGet=u=>{if(u&&u.id&&u._pf===undefined){u._pf=1;try{const o=JSON.parse(localStorage.getItem('pf:'+u.id)||'{}');u.av=o.av||'';u.cv=o.cv||''}catch(e){}}return u};
+const pfSave=u=>{try{localStorage.setItem('pf:'+u.id,JSON.stringify({av:u.av||'',cv:u.cv||''}))}catch(e){toast('Bộ nhớ trình duyệt đầy, ảnh chưa được lưu lại')}};
+const avH=(u,c)=>{pfGet(u);return `<span class="av${c?' '+c:''}"${u.av?` style="background:#fff center/cover no-repeat url('${u.av}');color:transparent"`:''}>${init(u)}</span>`};
+const pfHead=u=>{pfGet(u);return `<div class="pf"><div class="pfc"${u.cv?` style="background-image:url('${u.cv}')"`:''}><button class="pfb" onclick="pfM('cv')">${ic('cam')}Đổi ảnh bìa</button></div><div class="pfr"><div class="pfa">${avH(u,'pfv')}<button class="pfk" onclick="pfM('av')" aria-label="Đổi ảnh đại diện">${ic('cam')}</button></div><div class="pfn"><div class="nm2">${u.ten}</div><div class="ink2">${u.admin?'Quản trị viên':'Giáo viên'}, mã đăng nhập: ${u.id}</div></div></div></div>`};
+const pfM=k=>M(`<h2>${k==='av'?'Ảnh đại diện':'Ảnh bìa'}</h2><div class="ma" style="justify-content:flex-start"><label class="btn" style="cursor:pointer">${ic('cam')}Chọn ảnh<input type="file" accept="image/*" hidden onchange="pfSet('${k}',this.files[0])"></label>${me[k]?`<button class="btn l" onclick="pfDel('${k}')">Xóa ảnh</button>`:''}<button class="btn l" onclick="clM()">Đóng</button></div>`);
+const pfSet=(k,f)=>{if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),x=c.getContext('2d');if(k==='av'){const s=Math.min(im.width,im.height);c.width=c.height=256;x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,256,256)}else{const q=Math.min(1,1200/im.width);c.width=Math.round(im.width*q);c.height=Math.round(im.height*q);x.drawImage(im,0,0,c.width,c.height)}me[k]=c.toDataURL('image/jpeg',.82);pfSave(me);clM();refresh()};im.onerror=()=>toast('Không đọc được ảnh này');im.src=r.result};r.readAsDataURL(f)};
+const pfDel=k=>{me[k]='';pfSave(me);clM();refresh()};
+const nameM=()=>M(`<h2>Đổi họ tên</h2><div class="fl">${fr('Họ tên',`<input class="ti" id="nm0" value="${me.ten}">`)}</div><div class="ma"><button class="btn l" onclick="clM()">Hủy</button><button class="btn" onclick="nameSave()">Lưu</button></div>`);
+const nameSave=()=>{const v=$('nm0').value.trim();if(!v)return toast('Họ tên không được để trống');me.ten=v;clM();toast('Đã lưu');refresh()};
+const rateStart=id=>{OPEN.add('p'+id);ED={k:'lg',only:id,d:clone(GV)};refresh()};
+const rateEd=g=>{const i=GV.findIndex(z=>z.id===g.id);return clsEd(ED.d[i],i,'lg')};
+const rateSave=()=>`<div class="ma"><button class="btn l" onclick="cancelEdit()">Hủy</button><button class="btn" onclick="saveEdit()">Lưu thay đổi</button></div>`;
+const offAdd=()=>{const k=ymd(now());(ED.d.off=ED.d.off||[]).push({a:k,b:k,ly:''});refresh()};
+const offDel=i=>{ED.d.off.splice(i,1);refresh()};
+const offSet=(i,f,v)=>{const o=ED.d.off[i];o[f]=v;if(f!=='ly'&&o.b<o.a){if(f==='a')o.b=o.a;else o.a=o.b}refresh()};
+const wdc=k=>CA[new Date(k+'T12:00:00').getDay()]||[];
+const exOpts=k=>wdc(k).map(c=>`<option value="${c.id}">${tn(c)}</option>`).join('')||'<option value="">Ngày này trung tâm chưa có ca</option>';
+const exM=()=>{const k=ymd(now()),gs=GV.filter(g=>g.tt==='lam'),op=a=>a.map(g=>`<option value="${g.id}">${g.ten}</option>`).join(''),cl=[...new Set(GV.flatMap(g=>g.lop))];M(`<h2>Đổi lịch một ngày</h2><p class="m" style="margin-bottom:12px">Dùng khi có giáo viên nghỉ, dạy thay hoặc dạy bù. Chỉ đổi đúng ngày này, lịch cố định giữ nguyên.</p><div class="fl">${fr('Ngày',`<input class="ti" type="date" id="ex0" value="${k}" onchange="$('ex1').innerHTML=exOpts(this.value)">`)}${fr('Ca',`<select class="ti" id="ex1">${exOpts(k)}</select>`)}${fr('Giáo viên nghỉ ca này',`<select class="ti" id="ex2"><option value="">Không có</option>${op(GV)}</select>`)}${fr('Giáo viên dạy thay hoặc dạy bù',`<select class="ti" id="ex3"><option value="">Không có</option>${op(gs)}</select>`)}${fr('Lớp',`<input class="ti" id="ex4" list="exl" placeholder="Ví dụ: KET 1"><datalist id="exl">${cl.map(c=>`<option value="${c}">`).join('')}</datalist>`,'Cần khi có giáo viên dạy, để tính đúng mức lương')}${fr('Lý do','<input class="ti" id="ex5" placeholder="Ví dụ: Cô A bị ốm">')}</div><div class="ma"><button class="btn l" onclick="clM()">Hủy</button><button class="btn" onclick="exSave()">Lưu</button></div>`)};
+const exSave=()=>{const n=$('ex0').value,c=wdc(n).find(c=>String(c.id)===$('ex1').value),a=$('ex2').value,b=$('ex3').value,k=$('ex4').value.trim(),ly=$('ex5').value.trim();
+ if(!n||!c)return toast('Chọn ngày có ca');if(!a&&!b)return toast('Chọn giáo viên nghỉ hoặc giáo viên dạy');if(b&&!k)return toast('Nhập lớp để tính lương');if(a&&a===b)return toast('Hai giáo viên phải khác nhau');if(locked(n.slice(0,7)))return toast('Tháng này đã chốt lương');
+ const d=new Date(n+'T12:00:00'),G=GV.find(g=>g.id===b);if(G&&ca(G,d).some(x=>x.i===c.id))return toast('Giáo viên này đã có ca đó');
+ const put=(g,loai,kl)=>{if(!XD.some(x=>x.g===g&&x.n===n&&x.i===c.id&&x.loai===loai))XD.push({id:'x'+Date.now()+loai,g,n,i:c.id,k:kl,loai,ly})};
+ if(a)put(a,'bo','');if(b){put(b,'them',k);if(!G.lop.includes(k)){G.lop.push(k);G.lr[k]=0}}clM();toast('Đã đổi lịch ngày '+fd(n));refresh()};
+const exDel=id=>{const x=XD.find(x=>x.id===id);if(!x)return;if(locked(x.n.slice(0,7)))return toast('Tháng này đã chốt lương');XD.splice(XD.indexOf(x),1);refresh()};
+const exCard=()=>{const k=ymd(now()),A=XD.filter(x=>x.n>=k).sort((a,b)=>a.n<b.n?-1:a.n>b.n?1:0);return A.length?sec(1,'Lịch phát sinh')+`<div class="card rise">${A.map(x=>{const c=wdc(x.n).find(c=>c.id===x.i);return fr(fd(x.n)+' '+(c?c.n:''),`${gname(x.g)}: ${x.loai==='bo'?'nghỉ ca này':'dạy '+(x.k||'')}${x.ly?' ('+x.ly+')':''} <button class="btn l sm" title="Xóa" onclick="exDel('${x.id}')">${ic('x')}</button>`)}).join('')}</div>`:''};
+const adjM=(g,n)=>M(`<h2>Thêm thưởng hoặc phạt</h2><p class="m" style="margin-bottom:12px">${gname(g)}, tháng ${n.slice(5)}/${n.slice(0,4)}</p><div class="fl">${fr('Loại','<select class="ti" id="aj0"><option value="thuong">Thưởng</option><option value="phat">Phạt</option></select>')}${fr('Số tiền','<div class="un"><input class="ti" type="number" min="0" id="aj1" placeholder="0"><span>đ</span></div>')}${fr('Lý do','<input class="ti" id="aj2" placeholder="Ví dụ: Dạy thêm buổi ôn thi">')}</div><div class="ma"><button class="btn l" onclick="clM()">Hủy</button><button class="btn" onclick="addAdj('${g}','${n}')">Lưu</button></div>`);
+const addAdj=(g,n)=>{const st=+$('aj1').value;if(!(st>0))return toast('Nhập số tiền lớn hơn 0');if(locked(n))return toast('Tháng này đã chốt lương');ADJ.push({id:aid++,g,n,loai:$('aj0').value,st,ly:$('aj2').value.trim()});clM();refresh()};
+const delAdj=id=>ask('Xóa khoản này?','Khoản thưởng hoặc phạt sẽ bị bỏ khỏi bảng lương.','Xóa',()=>{const i=ADJ.findIndex(a=>a.id===id);if(i>=0)ADJ.splice(i,1);refresh()});
+const lockAsk=(n,v)=>ask(v?'Chốt lương tháng này?':'Mở lại tháng này?',v?'Sau khi chốt, công, thưởng và phạt của tháng này không sửa được.':'Tháng này sẽ sửa được lại.',v?'Chốt lương':'Mở lại',()=>{if(v)LOCK[n]=true;else{delete LOCK[n];Object.keys(SNAP).forEach(k=>{if(k.startsWith(n+'|'))delete SNAP[k]})}refresh()});
+function expPay(n){const c=['Mã,Họ tên,Số ca,Tiền ca,Thưởng,Phạt,Thực nhận',...GV.map(g=>({g,x:pay(g,n)})).filter(({g,x})=>g.tt!=='nghi'||x.c>0).map(({g,x})=>[g.id,g.ten,x.c,x.base,x.th,x.ph,x.tot].join(','))].join('\n');const l=document.createElement('a');l.href=URL.createObjectURL(new Blob(['\ufeff'+c],{type:'text/csv'}));l.download='bang-luong-'+n+'.csv';l.click()}
+
+const newQr=()=>ask('Đổi mã QR mới?','Mã cũ sẽ ngừng hoạt động. Bạn cần in và dán lại mã mới.','Đổi mã',()=>{ST.v++;toast('Đã đổi mã QR');refresh()});
+function pQr(){const t=now(),w=win(t),on=w&&t>=w[0]&&t<=w[1];
+ return hd('Mã QR chấm công','Dán ở lối ra hoặc hiển thị trên màn hình.')+`<div class="card rise" style="--i:2;text-align:center;max-width:420px"><div class="qrw">${qr(scanUrl(t))}</div>${ST.daily?`<p class="m" style="margin-bottom:12px">Mã hôm nay: <b>${qTok(t).toUpperCase()}</b></p>`:''}<p style="margin-bottom:14px">${on?chip('ok','Đang hoạt động'):chip('','Chưa hoạt động')}</p><div class="pa" style="justify-content:center"><button class="btn" onclick="print()">In mã QR</button><button class="btn l" onclick="newQr()">Đổi mã mới</button></div><p class="m" style="margin-top:14px">Quy tắc quét và kiểu mã chỉnh trong Cài đặt.</p></div>`}
+
+const addMin=(t,m)=>{const[h,n]=t.split(':'),x=Math.min(+h*60+(+n)+m,1439);return p(Math.floor(x/60))+':'+p(x%60)};
+const addCa=d=>{const L=ED.d[d],s=L.length?L[L.length-1].e:'17:30';L.push({id:nid++,n:'Ca '+(L.length+1),s,e:addMin(s,90)});refresh()};
+const delCa=(d,j)=>ask('Xóa ca?',`Ca này sẽ bị bỏ khỏi lịch ${W[d]} và lịch dạy của giáo viên. Dữ liệu chấm công cũ vẫn được giữ.`,'Xóa',()=>{ED.d[d].splice(j,1);refresh()});
+let ACM=0,ASD=null;
+const acm=v=>{ACM+=v;ASD=null;refresh()},apick=k=>{ASD=k;refresh()};
+const dayPlan=d=>{const o=[],C=CA[d.getDay()]||[];C.forEach(c=>o.push({c,L:[]}));GV.forEach(g=>ca(g,d,1).forEach(x=>{const e=o.find(z=>z.c.id===x.i);if(e)e.L.push({g,k:x.k&&g.lop.includes(x.k)?x.k:(g.lop[0]||'')})}));return o};
+const adminCal=()=>{const t=now(),td=ymd(t),b=new Date(t.getFullYear(),t.getMonth()+ACM,1),y=b.getFullYear(),mo=b.getMonth(),n=new Date(y,mo+1,0).getDate();let h=DN.slice(1).concat(DN[0]).map(x=>`<b>${x}</b>`).join('')+'<i></i>'.repeat((b.getDay()+6)%7);
+ if(!ASD||ASD.slice(0,7)!==ym(b))ASD=ACM===0?td:ymd(b);
+ for(let day=1;day<=n;day++){const d=new Date(y,mo,day),k=ymd(d),off=offOf(d),c=dayPlan(d).reduce((s,o)=>s+o.L.length,0);h+=`<button class="dy${k===td?' td':''}${k===ASD?' sl':''}" onclick="apick('${k}')"><span>${day}</span><div>${off?'<span class="ink2" style="font-size:11px">Nghỉ</span>':c?`<u>${c}</u>`:''}</div></button>`}
+ return `<div class="card rise" style="--i:2"><div class="cn"><button class="btn l sm" onclick="acm(-1)" aria-label="Tháng trước">${ic('chev','rl')}</button><b>Tháng ${mo+1}/${y}</b><button class="btn l sm" onclick="acm(1)" aria-label="Tháng sau">${ic('chev','rr')}</button></div><div class="cal">${h}</div></div>`};
+const adminDay=()=>{const d=new Date(ASD+'T12:00:00'),off=offOf(d),P=dayPlan(d);let rows='';P.forEach(o=>{const L=o.L.length?o.L:[null];L.forEach((x,j)=>{rows+=`<tr>${j?'':`<td class="cpD" rowspan="${L.length}">${o.c.n}<div class="ink2">${o.c.s} đến ${o.c.e}</div></td>`}<td>${x?x.g.ten:'<span class="cpN">Chưa có giáo viên</span>'}</td><td>${x?x.k:''}</td></tr>`})});
+ return `<div class="card rise" style="--i:3"><h2>${W[d.getDay()]}, ${dmy(ASD)}</h2>${off?`<p class="ink2" style="margin:0">Trung tâm nghỉ: ${off}</p>`:rows?`<div class="cpW"><table class="cpTb"><thead><tr><th>Ca</th><th>Giáo viên</th><th>Lớp</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<p class="ink2" style="margin:0">Ngày này trung tâm chưa có ca.</p>'}</div>`};
+function pCa(){const e=ED&&ED.k==='ca',C=e?ED.d:CA;
+ return hd('Lịch ca','',eb('ca'))+sec(1,'Lịch trong tháng')+adminCal()+sec(2,'Chi tiết ngày')+adminDay()+sec(3,'Giờ làm theo từng ngày')+`<div class="days">${DAYS.map((d,k)=>`<div class="card rise${e?' ed':''}" style="--i:${k+2}"><h2>${W[d]}</h2>${(C[d]||[]).map((c,j)=>e?`<div class="sr"><input class="ti n" value="${c.n}" oninput="ED.d[${d}][${j}].n=this.value"><input class="ti" type="time" value="${c.s}" oninput="ED.d[${d}][${j}].s=this.value"><input class="ti" type="time" value="${c.e}" oninput="ED.d[${d}][${j}].e=this.value"><button class="btn l sm" title="Xóa ca" onclick="delCa(${d},${j})">${ic('x')}</button></div>`:`<p class="sl">${chip('ok',c.n)} ${c.s}–${c.e}</p>`).join('')||'<p class="m">Chưa có ca</p>'}${e?`<button class="btn l sm" style="margin-top:8px" onclick="addCa(${d})">${ic('plus')}Thêm ca</button>`:''}</div>`).join('')}</div>`}
+
+const setLogo=f=>{if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,256/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ED.d.logo=c.toDataURL('image/png');refresh()};im.src=r.result};r.readAsDataURL(f)};
+function xuat(a){EX[a]=1;if(a===0){const c=['Giáo viên,Ngày,Ca,Giờ quét,Nguồn,Trễ (phút)',...R.map(r=>[gname(r.g),r.n,r.x.n,hm(r.t),r.src==='bu'?'xác nhận bù':'quét',r.tre].join(','))].join('\n');const l=document.createElement('a');l.href=URL.createObjectURL(new Blob(['\ufeff'+c],{type:'text/csv'}));l.download='cham-cong-thang.csv';l.click()}refresh()}
+function pCd(){const fr=fr2,e=ED&&ED.k==='cd',S=e?ED.d:ST,t=now(),w=win(t),on=w&&t>=w[0]&&t<=w[1],ed=e?' ed':'';
+ const num=(k,mn,u)=>e?`<div class="un"><input class="ti" type="number" min="${mn}" value="${S[k]}" oninput="ED.d.${k}=+this.value"><span>${u}</span></div>`:S[k]+' '+u,
+  txt=(k,ph='')=>e?`<input class="ti" value="${S[k]||''}" placeholder="${ph}" oninput="ED.d.${k}=this.value">`:(S[k]||'<span class="m">Chưa đặt</span>'),
+  sw=h=>`background:${h===null?'#ff7a1a':`hsl(${h} 80% 50%)`}`;
+ const lg=`<span class="lgp">${S.logo?`<img src="${S.logo}" alt="">`:ic('ok')}</span>`;
+ const logo=e?`<div class="pa">${lg}<label class="btn l sm">${ic('img')}Tải logo<input type="file" accept="image/*" hidden onchange="setLogo(this.files[0])"></label>${S.logo?`<button class="btn l sm" onclick="ED.d.logo='';refresh()">Bỏ logo</button>`:''}</div>`:lg;
+ const hue=e?`<div class="swr" style="margin:0">${HUES.map(([n,h])=>`<button class="swb${S.hue===h||(S.hue==null&&h===null)?' on':''}" title="${n}" style="${sw(h)}" onclick="ED.d.hue=${h};refresh()"></button>`).join('')}</div>`:`<span class="swb on" style="${sw(S.hue==null?null:S.hue)};cursor:default;width:28px;height:28px"></span>`;
+ return hd('Cài đặt','',eb('cd'))+sgTabs()
+ +(SGR==='tc'?sec(2,'Thương hiệu')+`<div class="card rise${ed}" style="--i:3"><div class="fl">${fr('Tên trung tâm',txt('ten','Tên trung tâm'))}${fr('Logo',logo,'Hiện ở thanh bên và trang đăng nhập')}</div></div>`:'')
+ +(SGR==='cc'?sec(4,'Quy tắc chấm công')+`<div class="card rise${ed}" style="--i:5"><div class="fl">${fr('Cho phép quét sớm',num('pre',0,'phút'),'Trước giờ hết ca đầu tiên trong ngày')}${fr('Cho phép quét sau ca cuối',num('win',0,'phút'),'Sau giờ hết ca cuối trong ngày')}${fr('Số ngày được xác nhận bù',num('bu',0,'ngày'),'Giáo viên tự xác nhận bù trong số ngày này')}</div></div>`:'')
+ +(SGR==='ng'?sec(5,'Ngày nghỉ chung')+`<div class="card rise${ed}" style="--i:6"><div class="fl">${(S.off||[]).map((o,i)=>fr(e?'Đợt '+(i+1):(o.ly||'Nghỉ'),e?`<div class="un cr"><input class="ti" type="date" value="${o.a}" onchange="offSet(${i},'a',this.value)"><input class="ti" type="date" value="${o.b}" onchange="offSet(${i},'b',this.value)"><input class="ti" value="${o.ly||''}" placeholder="Lý do (Tết, nghỉ lễ…)" onchange="offSet(${i},'ly',this.value)"><button class="btn l" title="Xóa" onclick="offDel(${i})">${ic('x')}</button></div>`:fd(o.a)+(o.b!==o.a?' – '+fd(o.b):''))).join('')||fr('Chưa có','Không có đợt nghỉ nào')}${e?`<button class="btn l" onclick="offAdd()">+ Thêm đợt nghỉ</button>`:''}</div></div>`:'')
+ +(SGR==='ng'?sec(5,'Đơn xin nghỉ')+`<div class="card rise${ed}" style="--i:6"><div class="fl">${fr('Cách xử lý đơn',e?`<select class="ti" onchange="ED.d.auto=this.value==='1'"><option value="0"${S.auto?'':' selected'}>Quản trị viên duyệt từng đơn</option><option value="1"${S.auto?' selected':''}>Tự động ghi nhận, không cần duyệt</option></select>`:(S.auto?'Tự động ghi nhận, không cần duyệt':'Quản trị viên duyệt từng đơn'),'Trung tâm nhỏ có thể chọn tự động ghi nhận. Giáo viên báo là có hiệu lực ngay')}</div></div>`:'')
+ +(SGR==='cc'?sec(6,'Mã QR')+`<div class="card rise${ed}" style="--i:7"><div class="fl">${fr('Trạng thái',on?chip('ok','Đang hoạt động'):chip('','Chưa hoạt động'))}${fr('Kiểu mã',e?`<select class="ti" onchange="ED.d.daily=this.value==='1'"><option value="0"${S.daily?'':' selected'}>Cố định, in một lần</option><option value="1"${S.daily?' selected':''}>Đổi mỗi ngày</option></select>`:(S.daily?'Đổi mỗi ngày':'Cố định, in một lần'),'Đổi mỗi ngày cần hiện mã trên màn hình hoặc in lại mỗi ngày')}${fr('Địa chỉ trang web',txt('url','Tự nhận theo trang đang mở'),'Chỉ cần điền khi đổi sang tên miền riêng')}${fr('Địa chỉ trong mã',`<span class="brk">${scanUrl(t)}</span>`)}${fr('Quét được hôm nay',w?`${hm(w[0])} đến ${hm(w[1])}`:'Hôm nay không có ca')}</div><div class="ma"><button class="btn l" onclick="newQr()">Đổi mã mới</button></div></div>`:'')
+ +(SGR==='tc'?sec(9,'Tài khoản')+`<div class="card rise" style="--i:10">${pfHead(me)}<div class="fl">${fr('Họ tên',me.ten+' <button class="btn l sm" style="margin-left:10px" onclick="nameM()">Sửa</button>')}${fr('Mã đăng nhập',me.id)}${fr('Mật khẩu','<button class="btn l sm" onclick="pwM(0)">Đổi mật khẩu</button>')}</div></div>`:'')
+ +(SGR==='dl'?sec(10,'Dữ liệu và lưu trữ')+`<div class="card rise${ed}" style="--i:11"><div class="fl">${fr('Số tháng lưu trữ',num('keep',1,'tháng'),'Tháng quá hạn chỉ tự xóa khi đã xuất file')}</div>${Array.from({length:ST.keep+2},(_,age)=>{const d=new Date(t.getFullYear(),t.getMonth()-age,1),ex=EX[age];return `<div class="rw2"><b>${d.getMonth()+1}/${d.getFullYear()}</b><div class="rg">${age<ST.keep?chip('ok','Đang lưu'):ex?chip('','Đã tự xóa'):chip('w','Giữ lại vì chưa xuất')}${ex?chip('ok','Đã xuất'):`<button class="btn l sm" onclick="xuat(${age})">Xuất Excel/PDF</button>`}</div></div>`}).join('')}</div>`:'')}
+
+const NAV={admin:[['hom-nay','Hôm nay','cal'],['giao-vien','Giáo viên','users'],['thong-bao','Thông báo','bell'],['luong','Lương','cash'],['ma-qr','Mã QR','qr'],['ca','Lịch ca','clk'],['cai-dat','Cài đặt','set']],gv:[['cham-cong','Chấm công','ok'],['lich','Lịch của tôi','cal'],['don','Báo nghỉ / bận','file'],['thong-bao','Thông báo','bell'],['thong-tin','Thông tin của tôi','usr']]};
+const PG_A={'hom-nay':pHom,'giao-vien':pGv,don:()=>{TBT='don';return pTb()},luong:pLuongA,'ma-qr':pQr,ca:pCa,'cai-dat':pCd,'thong-tin':pTt,'thong-bao':pTb},PG_G={'cham-cong':pCham,lich:pLich,don:pDonG,'thong-tin':pTt,'thong-bao':pTbG};
+const shell=L=>`<div class="shell"><div class="scrim" onclick="tgNav(0)"></div><aside class="side"><div class="logo">${brand()}<div>${ST.ten||'Chấm công QR'}<small>${me.admin?'Quản trị':'Giáo viên'}</small></div></div><nav class="nav"><div class="pill" id="pill"></div>${L.map(n=>`<a href="#/${n[0]}" title="${n[1]}" onclick="go('${n[0]}');tgNav(0);return false">${ic(n[2])}<span>${n[1]}</span>${n[0]==='thong-bao'?'<b class="bdg" id="bdn"></b>':''}</a>`).join('')}</nav>${me.admin?'<div class="pres" id="pres"></div>':''}<div class="me">${avH(me)}<div><b>${me.ten}</b><small>${me.admin?'Quản trị':'Giáo viên'}</small></div><button onclick="themeM()" title="Giao diện của tôi" aria-label="Giao diện của tôi">${ic('pal')}</button><button onclick="out()" title="Đăng xuất" aria-label="Đăng xuất">${ic('out')}</button></div></aside><main class="main"><div class="mtop"><button class="mbtn" onclick="tgNav()" aria-label="Menu">${ic('menu')}</button></div><div id="page"></div></main></div>`;
+const out=()=>{try{localStorage.setItem('th:dev',JSON.stringify({h:TH.h,s:TH.s}))}catch(e){}ED=null;me=null;TH=DT();applyTheme();go('')};
+const tgNav=v=>document.querySelector('.shell').classList.toggle('nv',v);
+const setData=m=>{ED=null;me=null;TH=DT();loadData(m);applyTheme();go('');toast(m==='sample'?'Đã nạp dữ liệu mẫu':'Đã chuyển sang hệ thống trống')};
+const mv=i=>{$('pill').style.transform=`translateY(${i*50}px)`;document.querySelectorAll('.nav a').forEach((a,k)=>a.classList.toggle('on',k===i))};
+async function fade(h){const a=$('app');a.style.opacity=0;a.style.transform='scale(.985)';await sleep(200);a.innerHTML=h;a.style.opacity=1;a.style.transform='none'}
+
+async function go(k,f){
+ let tok;if(k&&k.startsWith('quet/')){tok=k.slice(5);k='cham-cong'}
+ if(me&&ED&&!f&&k!==key){ask('Bỏ thay đổi chưa lưu?','Các thay đổi bạn vừa nhập sẽ mất.','Bỏ thay đổi',()=>{ED=null;go(tok!==undefined?'quet/'+tok:k,1)});return}
+ const T=++tk;
+ if(!me){if(tok!==undefined)nxt='quet/'+tok;await fade(login());cur=-1;key='';return}
+ const L=NAV[me.admin?'admin':'gv'],P=me.admin?PG_A:PG_G;if(tok!==undefined&&me.admin){toast('Tài khoản quản lý không chấm công. Hãy đăng nhập bằng tài khoản giáo viên.');tok=undefined}
+ let i=L.findIndex(n=>n[0]===k);if(i<0){i=0;k=L[0][0]}
+ const d=i<cur?'B':'F';
+ if(!$('page')){await fade(shell(L));if(T!==tk)return}
+ else{$('page').className='o'+d;await sleep(180);if(T!==tk)return}
+ if(k!==key){OPEN.clear();if(k==='lich'){CM=0;SD=ymd(now())}if(k==='luong'){PM=0;PQ='';PN=20}if(k==='giao-vien')GQ={q:'',st:'all',n:20};if(k==='don')RQT='cho'}
+ key=k;res=null;$('page').innerHTML=P[k]();$('page').className='i'+d;mv(i);fillSide();cur=i;try{history.replaceState(null,'','#/'+k)}catch(e){}
+ if(tok!==undefined)doScan(tok)}
+
+if(DEMO){$('sim').value=def();$('sim').onchange=()=>{if(me)refresh()}}else $('simw').remove();
+loadData(DEMO?'sample':'empty');window.onhashchange=()=>go(location.hash.slice(2));go(location.hash.slice(2));
+</script>
+</body></html>
