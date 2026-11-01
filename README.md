@@ -1,6 +1,6 @@
 # Hệ thống quản lý chấm công nhân viên bằng mã QR
 
-> **Lưu ý:** đây là bản demo. Dữ liệu nằm trong trình duyệt và mất khi tải lại trang. Giao diện chưa nối với Supabase, và `database/schema.sql` chưa có mức lương theo lớp, ngày nghỉ chung, lịch phát sinh, đề xuất chỉnh sửa. Vì vậy chưa dùng được cho chấm công thật.
+> **Lưu ý:** đây là bản demo. Dữ liệu chỉ nằm trong trình duyệt đang dùng, không đồng bộ giữa các máy. Giao diện chưa nối với Supabase, và `database/schema.sql` chưa có mức lương theo lớp, ngày nghỉ chung, lịch phát sinh, đề xuất chỉnh sửa. Vì vậy chưa dùng được cho chấm công thật.
 
 Hệ thống chấm công cho trung tâm nhỏ, thay cho chấm công giấy. Giáo viên đăng nhập một lần, sau đó mỗi buổi chỉ cần quét mã QR chung, không điền gì.
 
@@ -15,13 +15,14 @@ Hệ thống chấm công cho trung tâm nhỏ, thay cho chấm công giấy. Gi
 ## Cấu trúc
 - `web/index.html`: giao diện, một file duy nhất.
 - `database/schema.sql`: cơ sở dữ liệu cho Postgres/Supabase, chưa cập nhật theo các tính năng mới ở trên.
-- `database/seed-demo.sql`: lịch ca mẫu, chỉ dùng khi thử nghiệm.
 - `.github/workflows/pages.yml`: tự đưa thư mục `web` lên GitHub Pages mỗi lần đẩy lên nhánh `main`.
 
-## Xem demo
-Mở `web/index.html` bằng trình duyệt. Chip "Giờ demo" ở góc dưới có nút chuyển giữa dữ liệu mẫu và hệ thống trống.
-- Admin: `admin` / `admin123`
-- Giáo viên (dữ liệu mẫu): `GV02` / `123456`, GV01 đến GV06 dùng chung mật khẩu này.
+## Chạy thử
+Mở `web/index.html` bằng trình duyệt. Hệ thống bắt đầu trống, không có dữ liệu mẫu.
+- Đăng nhập admin: tên đăng nhập `admin`, mật khẩu ban đầu `admin123`. Lần đầu đăng nhập, hệ thống hiện hộp thoại bắt buộc đổi mật khẩu. Trang đăng nhập không có nút vào nhanh và không hiện mật khẩu nào.
+- Thêm ca ở tab Lịch ca, thêm giáo viên ở tab Giáo viên. Giáo viên mới có mật khẩu ban đầu `123456` và phải đổi ở lần đăng nhập đầu.
+- Chip "Giờ demo" ở góc dưới cho chỉnh giờ giả lập để thử quét mã mà không cần chờ đúng giờ ca. Nút "Đặt lại dữ liệu" xóa hết để làm lại từ đầu.
+- Dữ liệu thử được lưu trong chính trình duyệt đó và giữ nguyên khi tải lại trang. Nút "Đặt lại dữ liệu" (có cả ở trang đăng nhập) xóa hết và đưa mật khẩu admin về `admin123`. Nếu quên mật khẩu admin khi đang thử thì bấm nút này.
 
 ## Đẩy mã lên GitHub
 1. Trên github.com tạo một kho trống (không tích thêm README).
@@ -37,6 +38,7 @@ git push -u origin main
 3. Vào Settings > Pages > Source, chọn GitHub Actions. Đợi workflow chạy xong, địa chỉ sẽ là `https://<tên-tài-khoản>.github.io/<tên-kho>/`. Không cần mua tên miền.
 
 ## Nối Supabase (chưa làm trong giao diện)
+Mỗi khách hàng có tài khoản admin riêng, tạo lúc cài đặt với mật khẩu ban đầu riêng và bắt đổi ở lần đăng nhập đầu. Không để mật khẩu mặc định trong mã.
 1. Tạo project Supabase miễn phí, chạy `database/schema.sql` trong SQL Editor.
 2. Tạo tài khoản admin đầu tiên trong Authentication, rồi chạy: `insert into giao_vien (id, ma, ho_ten, vai_tro) values ('<uuid của user>', 'admin', 'Quản trị', 'admin');`
 3. Không đưa khóa `service_role` vào kho mã. Chỉ dùng khóa công khai (anon), dữ liệu được bảo vệ bằng các chính sách trong `schema.sql`.
